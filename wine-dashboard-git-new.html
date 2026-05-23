@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>花看半开 · 酒饮微醺 | 酒之益 · 五脉论</title>
+<style>
+:root{
+  --paper:#f5efe2;
+  --paper-2:#efe7d5;
+  --paper-3:#e9dfc9;
+  --ink:#1f1a16;
+  --ink-soft:#3a322b;
+  --ink-mute:#6b6058;
+  --line:#c7bda8;
+  --line-soft:#d9d0bc;
+  --accent:#8a3b2a;
+  --accent-2:#5e6b59;
+  --font:"Microsoft YaHei","微软雅黑","PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans CJK SC","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font);font-size:15.5px;line-height:1.85;letter-spacing:.01em}
+body{background-image:
+  radial-gradient(circle at 18% 12%,rgba(0,0,0,.025),transparent 55%),
+  radial-gradient(circle at 82% 88%,rgba(0,0,0,.03),transparent 55%);}
+.wrap{max-width:1080px;margin:0 auto;padding:56px 28px 80px}
+
+header{position:relative;border-bottom:1px solid var(--line);padding-bottom:30px;margin-bottom:40px}
+header .seal{position:absolute;right:0;top:6px;width:54px;height:54px;
+  border:1.5px solid var(--accent);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;letter-spacing:.2em;writing-mode:vertical-rl;
+  font-weight:600;border-radius:3px;opacity:.92;
+  animation:sealIn 1.2s ease-out .2s both}
+h1{font-size:40px;font-weight:600;letter-spacing:.18em;margin:0 0 12px;
+  animation:titleIn 1.3s ease-out both}
+.sub{color:var(--ink-mute);font-size:13.5px;letter-spacing:.22em}
+.epigraph{margin-top:10px;color:var(--ink-mute);font-size:13px;font-style:normal}
+.epigraph b{color:var(--ink)}
+.meta{margin-top:14px;color:var(--ink-mute);font-size:13px}
+.meta span{margin-right:18px}
+
+.hero{margin:18px 0 4px;padding:18px 22px;border-left:3px solid var(--accent);
+  background:rgba(255,255,255,.42);color:var(--ink-soft);font-size:14.5px;
+  display:flex;gap:22px;align-items:center;animation:fadeUp .9s ease-out .25s both}
+.hero .ill{flex:0 0 180px;opacity:.88}
+.hero em{color:var(--accent);font-style:normal}
+@media (max-width:640px){.hero{flex-direction:column;text-align:center}.hero .ill{flex-basis:auto}}
+
+section{margin-top:54px;opacity:0;transform:translateY(14px);
+  transition:opacity .8s ease,transform .8s ease}
+section.in{opacity:1;transform:none}
+.section-title{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.section-title .ill{flex:0 0 44px;height:44px;opacity:.78}
+.section-title .num{font-size:13px;color:var(--accent);letter-spacing:.3em}
+.section-title h2{font-size:22px;margin:0;font-weight:700;letter-spacing:.08em}
+.section-title .by{margin-left:auto;color:var(--ink-mute);font-size:12px;letter-spacing:.15em}
+
+.lede{margin:0 0 20px;color:var(--ink-soft);font-size:14.5px;line-height:2;
+  padding:14px 18px;background:rgba(255,255,255,.32);border-left:2px solid var(--line)}
+.lede b{color:var(--ink)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:720px){.grid,.grid-3{grid-template-columns:1fr}}
+.card{background:rgba(255,255,255,.42);border:1px solid var(--line-soft);
+  padding:22px 24px;border-radius:2px;
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px -14px rgba(0,0,0,.25);border-color:var(--line)}
+.card h3{margin:0 0 10px;font-size:17px;font-weight:700;letter-spacing:.05em}
+.card p{margin:6px 0;color:var(--ink-soft);font-size:14.5px}
+.card .q{color:var(--ink);border-left:2px solid var(--line);padding:8px 14px;
+  margin:10px 0;font-size:14px;background:rgba(0,0,0,.015)}
+.card .who{display:inline-block;font-size:11.5px;color:var(--accent);
+  border:1px solid var(--accent);padding:1px 6px;margin-right:6px;border-radius:2px;letter-spacing:.1em}
+.tag{display:inline-block;font-size:12px;color:var(--ink-mute);
+  border:1px solid var(--line);padding:2px 8px;margin-right:6px;border-radius:2px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:720px){.three{grid-template-columns:1fr}}
+.realm{padding:20px 18px;border:1px solid var(--line-soft);background:rgba(255,255,255,.42);
+  position:relative;transition:transform .35s ease,border-color .35s ease;text-align:center}
+.realm:hover{transform:translateY(-3px);border-color:var(--line)}
+.realm .pic{width:100%;height:90px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;opacity:.85}
+.realm .level{font-size:12px;letter-spacing:.25em;color:var(--accent);margin-bottom:6px}
+.realm h4{margin:0 0 8px;font-size:17px;font-weight:700}
+.realm p{margin:6px 0;font-size:14px;color:var(--ink-soft);text-align:left}
+.realm .foot{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line-soft);
+  color:var(--ink-mute);font-size:13px}
+
+.wines{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.wines{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.wines{grid-template-columns:1fr}}
+.wine{padding:16px;border:1px solid var(--line-soft);background:rgba(255,255,255,.42);
+  transition:border-color .35s ease,transform .35s ease;display:flex;flex-direction:column;gap:6px}
+.wine:hover{border-color:var(--accent);transform:translateY(-2px)}
+.wine .top{display:flex;align-items:center;gap:10px}
+.wine .pic{width:44px;height:44px;flex:0 0 44px;opacity:.85}
+.wine .name{font-weight:700;font-size:16px}
+.wine .key{color:var(--accent);font-size:12px;letter-spacing:.2em;
+  border:1px solid var(--accent);padding:1px 8px;border-radius:2px;margin-left:auto}
+.wine .desc{color:var(--ink-soft);font-size:13.5px;line-height:1.7}
+.wine .land{color:var(--ink-mute);font-size:12.5px;border-top:1px dashed var(--line-soft);padding-top:6px;margin-top:auto}
+.wine .types{color:var(--ink-mute);font-size:12.5px;font-style:italic}
+
+table.scale{width:100%;border-collapse:collapse;font-size:14px;background:rgba(255,255,255,.42)}
+table.scale th,table.scale td{border:1px solid var(--line-soft);padding:10px 12px;text-align:left;vertical-align:top}
+table.scale th{background:var(--paper-2);font-weight:700;color:var(--ink);letter-spacing:.05em;font-size:13.5px}
+table.scale td.dim{width:78px;color:var(--accent);font-weight:700;letter-spacing:.1em}
+table.scale tr{transition:background .3s ease}
+table.scale tbody tr:hover{background:rgba(138,59,42,.04)}
+
+.poles{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:720px){.poles{grid-template-columns:1fr}}
+.pole{padding:22px;border:1px solid var(--line-soft);background:rgba(255,255,255,.42);
+  transition:transform .35s ease,border-color .35s ease}
+.pole:hover{transform:translateY(-3px);border-color:var(--line)}
+.pole .ttl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.pole .ttl .pic{width:48px;height:48px;opacity:.85}
+.pole .ttl h4{margin:0;font-size:18px;font-weight:700}
+.pole .ttl .sub{color:var(--ink-mute);font-size:12px;letter-spacing:.15em;margin-left:auto}
+.pole blockquote{margin:8px 0;padding:8px 14px;border-left:2px solid var(--line);
+  color:var(--ink);font-size:14px;background:rgba(0,0,0,.015)}
+.pole blockquote cite{display:block;color:var(--ink-mute);font-size:12px;margin-top:4px;font-style:normal}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media (max-width:720px){.compare{grid-template-columns:1fr}}
+.compare .col{padding:18px 20px;border:1px solid var(--line-soft);background:rgba(255,255,255,.42)}
+.compare .col h5{margin:0 0 8px;font-size:14.5px;color:var(--accent);letter-spacing:.1em}
+.compare .col p{margin:6px 0;font-size:14px;color:var(--ink-soft)}
+
+.recipes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
+@media (max-width:720px){.recipes{grid-template-columns:1fr}}
+.recipe{padding:12px 16px;border:1px dashed var(--line-soft);background:rgba(255,255,255,.32);font-size:14px;color:var(--ink-soft)}
+.recipe b{color:var(--ink)}
+
+.match{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+@media (max-width:720px){.match{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.match{grid-template-columns:1fr}}
+.mcell{padding:12px 14px;border:1px solid var(--line-soft);background:rgba(255,255,255,.42);font-size:13.5px}
+.mcell b{color:var(--accent);display:block;margin-bottom:4px;letter-spacing:.05em}
+.mcell span{color:var(--ink-soft)}
+
+.coda{margin-top:46px;padding:36px 30px 30px;border:1px solid var(--line);
+  background:rgba(255,255,255,.5);text-align:center;position:relative;overflow:hidden}
+.coda .moonbig{position:absolute;left:50%;top:-44px;transform:translateX(-50%);width:120px;height:120px;
+  border-radius:50%;background:radial-gradient(circle at 38% 38%,rgba(245,239,226,.95),rgba(207,196,173,.5) 65%,transparent 72%);opacity:.7}
+.coda .one-line{font-size:18px;letter-spacing:.06em;color:var(--ink);line-height:2;position:relative}
+.coda .one-line em{color:var(--accent);font-style:normal;font-weight:700}
+.coda .sig{margin-top:14px;color:var(--ink-mute);font-size:13px;letter-spacing:.15em}
+
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;color:var(--ink-mute);font-size:12px;letter-spacing:.1em;gap:18px;flex-wrap:wrap}
+footer .right{font-style:italic}
+.brush{height:1px;background:linear-gradient(90deg,transparent,var(--ink) 30%,var(--ink) 70%,transparent);opacity:.35;margin:30px 0}
+
+@keyframes titleIn{from{opacity:0;letter-spacing:.4em}to{opacity:1;letter-spacing:.18em}}
+@keyframes sealIn{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:.92;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+.float{animation:drift 6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="seal">酒 · 论</div>
+  <h1>花看半开 &nbsp;酒饮微醺</h1>
+  <div class="sub">酒之益 · 五脉论 &nbsp;|&nbsp; A QUIET DISCOURSE ON WINE</div>
+  <div class="epigraph">题眼 ·《菜根谭》：<b>"花看半开，酒饮微醺，此中大有佳趣。"</b></div>
+  <div class="meta">
+    <span>对谈：文史哲探讨 × 调和精气神</span>
+    <span>体例：宣纸 · 水墨 · 克制版</span>
+    <span>整理：忠于原话引文，不增删立意</span>
+  </div>
+</header>
+
+<div class="hero">
+  <svg class="ill float" viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="#1f1a16" stop-opacity=".0"/>
+        <stop offset="1" stop-color="#1f1a16" stop-opacity=".15"/>
+      </linearGradient>
+    </defs>
+    <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 104 Q34 78 56 88 Q70 60 96 70 Q116 46 142 64 Q168 50 188 72 Q210 60 230 78 Q244 70 254 80"/>
+      <path d="M10 104 L254 104" stroke-width="0.8" opacity=".5"/>
+      <path d="M86 104 C84 90 90 84 100 84 L144 84 C154 84 160 90 158 104 Z"/>
+      <path d="M122 84 L122 68 M114 68 L130 68"/>
+      <ellipse cx="122" cy="62" rx="11" ry="3.5"/>
+      <path d="M178 60 Q186 54 194 60"/>
+      <path d="M160 76 L172 76 L172 92 L160 92 Z"/>
+      <path d="M40 86 Q44 80 50 84" opacity=".6"/>
+    </g>
+    <circle cx="218" cy="38" r="11" fill="#8a3b2a" opacity=".82"/>
+    <path d="M10 104 L254 104 L254 124 L10 124 Z" fill="url(#g1)"/>
+  </svg>
+  <div>
+    两位老师以"喝酒的益处"为题一来一回，凡<em>五脉</em>——历史人文之雅、酒之哲学三境、酒种文明、医道刻度、古酒道与现代异化。<br>
+    本页忠于群内原话整理，<em>不加修饰</em>；配色克制，留白为美，意在<em>"以纸代席，以墨代酒"</em>。
+  </div>
+</div>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8 36 L36 36"/>
+        <path d="M14 36 L14 18 Q14 10 22 10 Q30 10 30 18 L30 36"/>
+        <path d="M18 16 L26 16"/>
+        <path d="M22 22 L22 30"/>
+      </g>
+    </svg>
+    <span class="num">壹</span><h2>历史人文 — 文人之酒</h2>
+    <span class="by">主讲 · 文史哲探讨</span>
+  </div>
+
+  <div class="lede">
+    <b>核心论点：</b>「中国文人离了酒，半部文学史就空了」。酒是儒家社会唯一被官方默许的"逃逸通道"——
+    <b>低成本的临时出家</b>。诗酒永远连用，没有"诗茶"：茶让人更清醒，酒让人卸下面具——<b>诗需要的是后者</b>。
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>① 李白 — 斗酒诗百篇</h3>
+      <p><span class="who">文哲</span>《将进酒》："五花马、千金裘，呼儿将出换美酒。"</p>
+      <p class="q">"天子呼来不上船，自称臣是酒中仙"——清醒时说要杀头，醉了说叫风流。酒是他对抗"天生我材必有用而不见用"的盾牌。</p>
+    </div>
+    <div class="card">
+      <h3>② 陶渊明 — 不为五斗米折腰</h3>
+      <p><span class="who">文哲</span>《饮酒二十首》："采菊东篱下，悠然见南山。"</p>
+      <p class="q">"造饮辄尽，期在必醉，既醉而退，曾不吝情去留。"——醉了，社交规则就解除了，<b>"去留"凭真心</b>。</p>
+    </div>
+    <div class="card">
+      <h3>③ 苏东坡 — 黄州夜饮</h3>
+      <p><span class="who">文哲</span>"明月几时有，把酒问青天。"被贬黄州，靠"夜饮东坡醒复醉"撑过最暗几年。</p>
+      <p class="q">"对一张琴、一壶酒、一溪云"——独酌让人"听见自己"。<b>没有酒就没有《赤壁赋》</b>。</p>
+    </div>
+    <div class="card">
+      <h3>④ 王羲之 — 兰亭曲水流觞</h3>
+      <p><span class="who">文哲</span>醉中写就天下第一行书，醒后再写竟不如初稿。</p>
+      <p class="q">罚酒罚的是<b>"创造力的缺席"</b>，不是劝人喝倒——古酒道罚醉，今酒桌劝醉，正相反。</p>
+    </div>
+    <div class="card">
+      <h3>⑤ 阮籍 · 嵇康 · 刘伶 — 魏晋名士</h3>
+      <p><span class="who">文哲</span>阮籍醉六十日避司马昭求亲；刘伶"死便埋我"。</p>
+      <p><span class="who">文哲</span>嵇康临刑前"顾视日影，索琴而弹"——他不需要酒。</p>
+      <p class="q">酒是魏晋名士对抗黑暗政治的姿态；嵇康做不到的事，<b>酒替同代人做了</b>。</p>
+    </div>
+    <div class="card">
+      <h3>⑥ 孔融 · 关汉卿 · 欧阳修</h3>
+      <p><span class="who">文哲</span>孔融："座上客常满，樽中酒不空，吾无忧矣。"</p>
+      <p><span class="who">文哲</span>关汉卿："蒸不烂、煮不熟、槌不匾、炒不爆，<b>响珰珰一粒铜豌豆</b>。"</p>
+      <p class="q">欧阳修《醉翁亭记》："醉翁之意不在酒，在乎山水之间也。"——酒只是引子，<b>真正享受的是天地人和的那个"境"</b>。</p>
+    </div>
+  </div>
+
+  <div class="lede" style="margin-top:18px">
+    <b>儒家警戒线：</b>《尚书·酒诰》是中国最早的禁酒令，周公以商纣亡国为戒——"庶群自酒，腥闻在上"。
+    孔子定的尺子是"<b>唯酒无量，不及乱</b>"——能喝多少喝多少，但不能失态。
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="22" cy="22" r="13"/>
+        <path d="M14 20 Q22 14 30 20"/>
+        <path d="M14 24 Q22 30 30 24"/>
+        <circle cx="22" cy="22" r="2" fill="#8a3b2a" stroke="none"/>
+      </g>
+    </svg>
+    <span class="num">贰</span><h2>酒的哲学 — 醉之三境</h2>
+    <span class="by">合议 · 文史哲 × 精气神</span>
+  </div>
+
+  <div class="lede">
+    <b>文史哲</b>把酒境分三层；<b>精气神</b>从医道讲为<b>「养 / 乐 / 伤」</b>三度——两条线<b>暗合</b>。
+    根本规律：<b>剂量为药，过量为毒；得时为益，失时为害</b>。
+    最高境界：欧阳修「醉翁之意不在酒，在乎山水之间也」——<b>酒只是引子</b>。
+  </div>
+
+  <div class="three">
+    <div class="realm">
+      <div class="pic"><svg viewBox="0 0 100 80" width="100" height="80">
+        <g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M30 18 L70 18 L66 38 Q66 48 50 48 Q34 48 34 38 Z"/>
+          <path d="M50 48 L50 60 M38 60 L62 60"/>
+          <path d="M44 26 Q50 30 56 26" opacity=".6"/>
+        </g>
+        <circle cx="78" cy="20" r="4" fill="#8a3b2a" opacity=".75"/>
+      </svg></div>
+      <div class="level">微醺 · 一</div>
+      <h4>儒家境 — 君子饮</h4>
+      <p>"<b>唯酒无量，不及乱</b>"——孔子之标准；曾国藩日记自记"小酌怡情"，止于此。</p>
+      <p>面颊微红，心神舒展，谈兴渐起，<b>到此即止</b>，是养生境界。</p>
+      <div class="foot">精气神：<b>养</b> · 气血通畅，药效已成</div>
+    </div>
+    <div class="realm">
+      <div class="pic"><svg viewBox="0 0 100 80" width="100" height="80">
+        <g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M10 56 Q30 40 50 56 Q70 40 90 56"/>
+          <path d="M10 64 Q30 48 50 64 Q70 48 90 64" opacity=".6"/>
+          <circle cx="50" cy="22" r="9" fill="none"/>
+          <path d="M44 22 Q50 18 56 22" opacity=".7"/>
+        </g>
+      </svg></div>
+      <div class="level">半醉 · 二</div>
+      <h4>道家境 — 神全</h4>
+      <p>《庄子·达生》："醉者之坠车，虽疾不死。其<b>神全</b>也，乘亦不知，坠亦不知。"</p>
+      <p>陶渊明之"悠然"、王羲之之"曲水流觞"皆在此层；<b>好诗多出此境</b>。</p>
+      <div class="foot">精气神：<b>乐</b> · 偶一为之，文章佳作多出此境</div>
+    </div>
+    <div class="realm">
+      <div class="pic"><svg viewBox="0 0 100 80" width="100" height="80">
+        <g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M22 60 L40 22 L58 60 Z"/>
+          <path d="M58 60 L78 30 L88 60"/>
+          <path d="M22 60 L88 60" opacity=".5"/>
+          <path d="M44 60 Q46 52 50 52 Q54 52 56 60" opacity=".6"/>
+        </g>
+        <circle cx="82" cy="18" r="3" fill="#8a3b2a" opacity=".7"/>
+      </svg></div>
+      <div class="level">大醉 · 三</div>
+      <h4>禅家境 — 无我</h4>
+      <p>刘伶"死便埋我"，李白"会须一饮三百杯"——以酒精<b>强行打破"我"的边界</b>。</p>
+      <p>代价巨大：李白晚年潦倒、刘伶肝病早逝，<b>都是同一笔账</b>。</p>
+      <div class="foot">精气神：<b>伤</b> · 频繁此境者，十年必现重病</div>
+    </div>
+  </div>
+
+  <div class="lede" style="margin-top:18px">
+    <b>道家解：</b>《庄子·达生》"<b>醉者神全</b>"——酒不是麻醉，是<b>短暂解除"自我执念"的工具</b>。
+    老子讲"涤除玄览"、禅宗讲"破我执"——三杯下肚，平时端着的面具松了，真性情才出来。
+    所以孔融才说："座上客常满，樽中酒不空，吾无忧矣。"
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <path d="M14 10 L30 10 L28 22 Q28 28 22 28 Q16 28 16 22 Z"/>
+        <path d="M22 28 L22 36 M16 36 L28 36"/>
+        <path d="M18 16 Q22 18 26 16" opacity=".6"/>
+      </g>
+    </svg>
+    <span class="num">叁</span><h2>酒的种类 — 一杯一文明</h2>
+    <span class="by">合议 · 文史哲 × 精气神</span>
+  </div>
+
+  <div class="lede">
+    <b>酒种的差异，本质是文明性格的差异</b>——一个民族喜欢什么酒，就喜欢什么样的人际关系。
+    黄酒讲"和"、白酒讲"破"、葡萄酒讲"礼"、清酒讲"敬"、威士忌讲"独"——每一杯都是一种世界观的微缩。
+  </div>
+
+  <div class="wines">
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M14 10 L30 10 L30 30 Q30 36 22 36 Q14 36 14 30 Z"/>
+          <path d="M14 18 Q22 22 30 18" opacity=".7"/>
+          <path d="M16 12 L28 12" opacity=".5"/>
+        </g></svg>
+        <div class="name">黄酒</div><div class="key">和</div>
+      </div>
+      <div class="desc">最古老，源自商周。温润内敛，<b>慢醉慢醒</b>，是文人之酒。鲁迅笔下孔乙己"温两碗酒，要一碟茴香豆"，喝的就是这个。</div>
+      <div class="types">代表：绍兴花雕、女儿红、加饭酒</div>
+      <div class="land">江浙绍兴 · 文人案头 · 养人之酒</div>
+    </div>
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M16 8 L28 8 L26 16 Q26 16 22 16 Q18 16 18 16 Z"/>
+          <path d="M14 16 L30 16 L28 36 L16 36 Z"/>
+          <path d="M18 22 L26 22" opacity=".5"/>
+        </g></svg>
+        <div class="name">白酒</div><div class="key">破</div>
+      </div>
+      <div class="desc">元代蒸馏术传入后兴起。一口下去打破拘束，<b>烈、烫、直</b>。北方苦寒地饮之御寒，但量必须更小。</div>
+      <div class="types">十二大香型：酱（茅台）· 浓（五粮液）· 清（汾酒）· 药（董酒）· 凤（西凤）…</div>
+      <div class="land">北方酒桌 · 商场决断 · 性格之酒</div>
+    </div>
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M22 6 L22 14"/>
+          <path d="M14 14 L30 14 L26 26 Q26 30 22 30 Q18 30 18 26 Z"/>
+          <path d="M22 30 L22 38 M16 38 L28 38"/>
+        </g></svg>
+        <div class="name">葡萄酒</div><div class="key">礼</div>
+      </div>
+      <div class="desc">王翰《凉州词》"葡萄美酒夜光杯，欲饮琵琶马上催"，唐代已盛行。年份、产区、配餐处处规范——喝的是<b>契约文化</b>本身。</div>
+      <div class="types">中医视为"酸甘"，少量于血瘀、心脉不畅者有益</div>
+      <div class="land">法兰西 · 餐桌仪轨 · 礼制之酒</div>
+    </div>
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M16 14 L28 14 L26 26 Q26 30 22 30 Q18 30 18 26 Z"/>
+          <path d="M22 30 L22 36 M18 36 L26 36"/>
+          <path d="M12 12 L32 12" opacity=".5"/>
+          <path d="M20 8 L24 8" opacity=".5"/>
+        </g></svg>
+        <div class="name">清酒</div><div class="key">敬</div>
+      </div>
+      <div class="desc">杯小酒淡，<b>"一期一会"</b>的郑重藏在每一次双手奉杯里。喝的不是酒，是仪式。</div>
+      <div class="types">大吟酿 · 纯米吟酿 · 本酿造</div>
+      <div class="land">东瀛京都 · 茶酒一体 · 仪式之酒</div>
+    </div>
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M14 10 L30 10 L30 32 Q30 36 26 36 L18 36 Q14 36 14 32 Z"/>
+          <path d="M14 22 L30 22" opacity=".5"/>
+          <path d="M18 14 L26 14" opacity=".5"/>
+        </g></svg>
+        <div class="name">威士忌 / 精酿</div><div class="key">独</div>
+      </div>
+      <div class="desc">一人一杯，琥珀色里藏年岁。年轻人喝精酿、独自小酌，对应<b>现代都市的孤独经济</b>——反而比应酬场上的中年人<b>更接近古人酒道</b>。</div>
+      <div class="types">苏格兰单一麦芽 · 日本三得利 · 国产精酿</div>
+      <div class="land">都市夜晚 · 独处之酒 · 反劝酒一代</div>
+    </div>
+    <div class="wine">
+      <div class="top">
+        <svg class="pic" viewBox="0 0 44 44"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M14 14 L30 14 L30 32 Q30 36 26 36 L18 36 Q14 36 14 32 Z"/>
+          <path d="M18 22 Q22 26 26 22"/>
+          <path d="M22 8 L22 14"/>
+          <path d="M18 10 L26 10" opacity=".6"/>
+        </g></svg>
+        <div class="name">药酒 / 米酒</div><div class="key">引</div>
+      </div>
+      <div class="desc"><b>引药入经，温通血脉</b>——药酒之所以为药酒。米酒（醪糟）甘甜养脾，孩子月子皆能沾，是<b>生活之酒</b>。</div>
+      <div class="types">屠苏酒 · 五加皮酒 · 虎骨木瓜酒 · 鹿茸 · 枸杞 · 人参 · 红花 · 当归酒</div>
+      <div class="land">中医世家 · 医道之器 · 必须辨证</div>
+    </div>
+  </div>
+
+  <div class="lede" style="margin-top:18px;border-left-color:var(--accent);color:var(--accent)">
+    <b>警示：</b>社会上流行的"万能药酒"多是民间附会，乱泡蛇虫鼠蚁反致中毒——前几年云南<b>"曼陀罗药酒中毒案"</b>即是教训。
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <path d="M22 8 L22 36"/>
+        <path d="M14 14 L30 14"/>
+        <path d="M12 22 Q22 26 32 22"/>
+        <path d="M14 30 L30 30"/>
+        <circle cx="22" cy="22" r="1.5" fill="#8a3b2a" stroke="none"/>
+      </g>
+    </svg>
+    <span class="num">肆</span><h2>中医医道 — 百药之长，剂量为药</h2>
+    <span class="by">主讲 · 调和精气神</span>
+  </div>
+
+  <div class="lede">
+    <b>核心论点：</b>《汉书·食货志》"酒者，<b>天之美禄</b>……百礼之会，非酒不行。" 张仲景《伤寒论》直接拿酒入方——
+    <b>炙甘草汤</b>用清酒七升煮药、<b>瓜蒌薤白白酒汤</b>治胸痹、<b>当归四逆加吴茱萸生姜汤</b>少不了酒。
+    繁体「<b>醫</b>」字下面就是「酉」——上古巫医不分家，酒既是麻醉剂、消毒剂，也是通神之物。
+    <b>《黄帝内经·汤液醪醴论》</b>专章讨论酒在医道里的地位。
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>李时珍十六字 — 中医对酒的判词</h3>
+      <p class="q" style="font-size:16.5px;letter-spacing:.1em;text-align:center">
+        少饮则和血行气，壮神御寒，消愁遣兴；<br>
+        痛饮则伤神耗血，损胃亡精，生痰动火。
+      </p>
+      <p>同一物，剂量不同，益害两途——<b>"百药之长"与"伐性之斧"，只在一字之差</b>。</p>
+    </div>
+    <div class="card">
+      <h3>七大益 — 中医确认的功用</h3>
+      <p><span class="tag">通血脉</span>少量饮之，血行加速，《本草》言"通经络"。</p>
+      <p><span class="tag">行药势</span>"<b>酒为引经</b>"——活血、祛风、补肾药遇酒效力倍增。</p>
+      <p><span class="tag">散湿气</span>岭南、川黔湿瘴之地多嗜酒，非偶然。</p>
+      <p><span class="tag">御寒邪</span>北方苦寒，张仲景以酒煎药驱寒。</p>
+      <p><span class="tag">消愁遣兴</span>《素问·举痛论》："百病生于气"——酒乃"平价逍遥散"。</p>
+      <p><span class="tag">助眠安神</span>肝郁失眠者，睡前一小杯黄酒，胜过安眠药（阴虚火旺者忌）。</p>
+      <p><span class="tag">健脾开胃</span>"饭前一杯酒，胜过老郎中"——醒脾之功。</p>
+    </div>
+    <div class="card">
+      <h3>三大害 — 医家警示</h3>
+      <p><span class="tag" style="color:var(--accent);border-color:var(--accent)">伤肝</span>酒性湿热，长饮致脂肪肝、肝硬化（中医谓"肝热""肝阴虚"）。</p>
+      <p><span class="tag" style="color:var(--accent);border-color:var(--accent)">灼胃生痰</span>胃喜润恶燥；火性入胃，痰湿内生，舌苔厚腻。</p>
+      <p><span class="tag" style="color:var(--accent);border-color:var(--accent)">耗精动火</span>《黄帝内经·上古天真论》痛斥："<b>以酒为浆，以妄为常，醉以入房，以欲竭其精，以耗散其真</b>"——此为半百而衰四大恶习之首。</p>
+      <p style="margin-top:10px;color:var(--accent)"><b>头号大忌：酒后行房。</b>耗肾精、伤元气，远比酒本身更损人。</p>
+    </div>
+    <div class="card">
+      <h3>六大禁忌人群 — 一律忌</h3>
+      <p>① <b>湿热体质</b>——舌苔黄腻、痤疮口臭者</p>
+      <p>② <b>阴虚火旺</b>——手足心热、口干失眠者</p>
+      <p>③ <b>肝病、胆病、胃病者</b></p>
+      <p>④ <b>服药期间</b>——尤其头孢类、降压药、降糖药</p>
+      <p>⑤ <b>孕妇、备孕者、哺乳期</b>——一滴不沾</p>
+      <p>⑥ <b>痛风、糖尿病、高血压、高血脂患者</b></p>
+    </div>
+  </div>
+
+  <h3 style="margin:28px 0 8px;font-size:16px;letter-spacing:.05em">配对刻度 · 酒与体质</h3>
+  <div class="match">
+    <div class="mcell"><b>黄酒（温润）</b><span>气血两虚、女性产后、江南湿地人最宜</span></div>
+    <div class="mcell"><b>白酒（辛烈）</b><span>阳虚畏寒、北方苦寒地最宜；量必须更小</span></div>
+    <div class="mcell"><b>米酒（甘甜）</b><span>脾虚食少、产妇月子最宜</span></div>
+    <div class="mcell"><b>葡萄酒（酸甘）</b><span>血瘀、心脉不畅者少量有益</span></div>
+  </div>
+
+  <h3 style="margin:24px 0 8px;font-size:16px;letter-spacing:.05em">古方药酒 · 源远流长</h3>
+  <div class="recipes">
+    <div class="recipe"><b>屠苏酒</b>（华佗方／孙思邈传）—— 元旦饮之，<b>辟瘟疫</b></div>
+    <div class="recipe"><b>五加皮酒</b> —— 祛风湿、强筋骨，李时珍极推崇</div>
+    <div class="recipe"><b>虎骨木瓜酒</b>（今以豹骨/狗骨代）—— 治痹症</div>
+    <div class="recipe"><b>鹿茸 · 枸杞 · 人参酒</b> —— 补虚损</div>
+    <div class="recipe"><b>红花酒 · 当归酒</b> —— 活血调经</div>
+    <div class="recipe"><b>炙甘草汤 · 瓜蒌薤白白酒汤</b> —— 张仲景以酒入方，治胸痹</div>
+  </div>
+
+  <div class="lede" style="margin-top:18px">
+    <b>三个分寸（临床刻度）：</b>
+    微醺<b>为养</b> · 半醉<b>为乐</b> · 大醉<b>为伤</b>。<br>
+    建议剂量：<b>男子约一两 / 日，女子减半</b>；空腹勿饮，情绪低谷期忌饮。
+  </div>
+</section>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8 32 Q16 24 22 32 Q28 24 36 32"/>
+        <path d="M8 26 Q16 18 22 26 Q28 18 36 26" opacity=".6"/>
+        <circle cx="32" cy="14" r="4" fill="#8a3b2a" stroke="none" opacity=".75"/>
+      </g>
+    </svg>
+    <span class="num">伍</span><h2>现代反思 — 古酒道 vs 今酒桌</h2>
+    <span class="by">合议 · 文史哲 × 精气神</span>
+  </div>
+
+  <div class="lede">
+    <b>最痛的一刀。</b>古人喝酒的核心是<b>"自得"</b>——陶渊明"既醉之后，辄题数句自娱"，关键在"自娱"二字。
+    <b>酒是给自己喝的，不是给别人看的</b>。现代酒桌把这一切倒了过来：<b>从向内的自由，倒为向外的服从</b>。<br>
+    塔勒布讲"过度优化系统的脆弱性"——劝酒文化即是典型，把弹性的雅事，固化为必须完成的<b>社交 KPI</b>。
+  </div>
+
+  <div class="poles">
+    <div class="pole">
+      <div class="ttl">
+        <svg class="pic" viewBox="0 0 48 48"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="34" cy="14" r="6"/>
+          <path d="M16 20 L26 20 L24 30 Q24 34 20 34 Q16 34 16 30 Z"/>
+          <path d="M20 34 L20 40 M14 40 L26 40"/>
+        </g></svg>
+        <h4>独酌 — 向内的酒</h4>
+        <span class="sub">哲学之酒 · 破我执</span>
+      </div>
+      <blockquote>花间一壶酒，独酌无相亲。举杯邀明月，对影成三人。<cite>—— 李白</cite></blockquote>
+      <blockquote>得欢当作乐，斗酒聚比邻；<b>泛此忘忧物，远我遗世情</b>。<cite>—— 陶渊明</cite></blockquote>
+      <blockquote>对一张琴、一壶酒、一溪云。<cite>—— 苏东坡</cite></blockquote>
+      <p style="color:var(--ink-soft);font-size:14px;margin-top:10px">
+        独酌的最高境界是<b>与天地精神往来</b>——一个人喝酒，喝的是和宇宙的对话。
+        核心是"破我执"，酒成了照内心的一面镜子。<b>最高级的酒，门槛也最高——你得能和自己独处</b>。
+      </p>
+    </div>
+    <div class="pole">
+      <div class="ttl">
+        <svg class="pic" viewBox="0 0 48 48"><g fill="none" stroke="#1f1a16" stroke-width="1.4" stroke-linecap="round">
+          <path d="M14 22 L22 22 L20 30 Q20 34 17 34 Q14 34 14 30 Z"/>
+          <path d="M28 22 L36 22 L34 30 Q34 34 31 34 Q28 34 28 30 Z"/>
+          <path d="M17 34 L17 40 M28 38 L20 38 M31 34 L31 40"/>
+          <path d="M22 22 L28 22" opacity=".6"/>
+        </g></svg>
+        <h4>对饮 — 向外的酒</h4>
+        <span class="sub">情谊之酒 · 立此存照</span>
+      </div>
+      <blockquote>劝君更尽一杯酒，西出阳关无故人。<cite>—— 王维</cite></blockquote>
+      <blockquote>肯与邻翁相对饮，隔篱呼取尽余杯。<cite>—— 杜甫</cite></blockquote>
+      <blockquote>莫愁前路无知己，天下谁人不识君。<cite>—— 高适</cite></blockquote>
+      <p style="color:var(--ink-soft);font-size:14px;margin-top:10px">
+        对饮的灵魂是"此一别就是一生"的<b>郑重</b>。核心是"立此存照"——酒成了情谊的见证物。
+        <b>能独酌者方能真正对饮</b>——对饮时不为寻人填补孤独，是为分享自得之乐。
+      </p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:22px">
+    <h3 style="color:var(--accent)">异化之痛 — 古酒道之死</h3>
+    <p>从「<b>自饮</b>」变成「<b>劝饮</b>」——"感情深一口闷"，把酒变成<b>权力测试</b>。</p>
+    <p>从「<b>微醺</b>」变成「<b>喝倒</b>」——以把对方喝趴为荣，本质是<b>羞辱</b>。</p>
+    <p>从「<b>无尊卑</b>」变成「<b>敬酒序</b>」——谁先敬谁、敬几杯、用什么杯，全是<b>等级编码</b>。</p>
+    <p>从「<b>诗酒风流</b>」变成「<b>酒后失言</b>」——古人借酒说真话叫"率真"，今人借酒说真话叫"事故"。</p>
+    <p style="margin-top:12px;border-top:1px dashed var(--line-soft);padding-top:10px">
+      <b>古酒道是向内的自由，今酒桌是向外的服从</b>——这是本质区别。<br>
+      年轻人喝精酿、独酌小饮、反劝酒，<b>反而比应酬场上的中年人更接近古人酒道</b>——这是"<b>重新夺回酒的主权</b>"。
+    </p>
+  </div>
+</section>
+
+<div class="brush"></div>
+
+<section>
+  <div class="section-title">
+    <svg class="ill" viewBox="0 0 44 44" aria-hidden="true">
+      <g fill="none" stroke="#1f1a16" stroke-width="1.5" stroke-linecap="round">
+        <rect x="8" y="10" width="28" height="24" rx="1.5"/>
+        <path d="M8 18 L36 18 M18 18 L18 34 M28 18 L28 34"/>
+      </g>
+    </svg>
+    <span class="num">表</span><h2>益害刻度表 — 给现代人的一页结论</h2>
+    <span class="by">五维合参 · 双方共识</span>
+  </div>
+
+  <table class="scale">
+    <thead><tr><th>维度</th><th>益</th><th>害</th><th>度（节制之钥）</th></tr></thead>
+    <tbody>
+      <tr><td class="dim">生理</td><td>通脉、行药、御寒驱湿、舒筋活络</td><td>伤肝、灼胃、耗精、湿热内蕴</td><td>男一两 / 日，女减半；空腹勿饮</td></tr>
+      <tr><td class="dim">心理</td><td>解忧、卸甲、舒肝、暂离我执</td><td>成瘾、抑郁、失控、借酒消愁愁更愁</td><td>微醺即止；情绪低谷期忌饮</td></tr>
+      <tr><td class="dim">社交</td><td>破冰、平权、达情、说清醒时不敢说之话</td><td>劝酒、表演、内耗、酒后失言</td><td>自饮为主，对饮为辅；拒绝劝酒</td></tr>
+      <tr><td class="dim">精神</td><td>神全、自得、催化诗境、与天地往来</td><td>失态、伤德、亡形骸、玩坏身体</td><td>独酌养心，对饮养情；远离应酬</td></tr>
+      <tr><td class="dim">文化</td><td>雅集、传承、出口阀、儒家社会弹性</td><td>异化、攀比、应酬场、酒桌 KPI</td><td>复古酒道，去酒桌化</td></tr>
+    </tbody>
+  </table>
+
+  <div class="lede" style="margin-top:18px">
+    <b>三家共识：</b>儒道医罕见地一致——<b>"过则反"</b>。
+    李时珍十六字、孔子"不及乱"、庄子"神全"——<b>都建立在"不过量"之上</b>。<b>过则反，这是道家根本律。</b><br>
+    <b>"微醺"二字，是中医与文人共同的最高境界。</b>陶渊明"题数句即止"，苏东坡"夜饮东坡醒复醉"——关键在"醒"字，<b>醒醉交替方是真养生</b>。
+  </div>
+</section>
+
+<div class="coda">
+  <div class="moonbig"></div>
+  <div class="one-line">
+    古人喝的是酒里的<em>"我"</em>，&nbsp;今人常喝成酒桌的<em>"奴"</em>。<br>
+    要益不要害，关键就一条 —— <em>把喝酒的主权拿回来，喝给自己，不喝给别人看</em>。
+  </div>
+  <div class="sig">—— 文史哲探讨 × 调和精气神 &nbsp;联袂出品</div>
+</div>
+
+<footer>
+  <div>本页忠于群内对谈原话整理，不构成医学建议。饮酒须节，未成年勿饮。</div>
+  <div class="right">花看半开 · 酒饮微醺</div>
+</footer>
+
+</div>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('section').forEach(s => io.observe(s));
+</script>
+
+</body>
+</html>
