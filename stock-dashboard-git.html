@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Top 股票周报 · 2026.5.17–5.23 | Analyst Dashboard</title>
+<style>
+:root{
+  --bg-0:#05070d;--bg-1:#0b1020;--bg-2:#10172a;
+  --card:rgba(20,28,48,.55);--card-2:rgba(15,22,40,.65);
+  --line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
+  --text:#e6ecff;--text-2:#9aa6c8;--text-3:#6c7596;
+  --up:#22d3a6;--down:#ff5470;--neutral:#8ea2ff;--accent:#7c9eff;--warn:#ffb84d;
+  --shadow:0 10px 40px -10px rgba(0,0,0,.6);
+  --font:"Microsoft YaHei","微软雅黑","PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Source Han Sans SC","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Mono","Consolas","Menlo",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg-0);color:var(--text);
+  font-family:var(--font);font-size:14.5px;line-height:1.7;letter-spacing:.01em;overflow-x:hidden}
+body{
+  background:
+    radial-gradient(1200px 600px at 80% -10%,rgba(124,158,255,.18),transparent 60%),
+    radial-gradient(900px 500px at -10% 30%,rgba(34,211,166,.10),transparent 60%),
+    radial-gradient(800px 500px at 50% 110%,rgba(255,84,112,.10),transparent 60%),
+    linear-gradient(180deg,var(--bg-0) 0%,var(--bg-1) 40%,var(--bg-0) 100%);
+  min-height:100vh;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:34px 24px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .logo{width:42px;height:42px;border-radius:10px;
+  background:linear-gradient(135deg,#7c9eff,#22d3a6);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px -8px rgba(124,158,255,.6);font-weight:800;font-size:18px;color:#0b1020}
+.brand h1{font-size:22px;margin:0;font-weight:700;letter-spacing:.04em}
+.brand .sub{color:var(--text-2);font-size:12.5px;margin-top:2px;letter-spacing:.1em}
+.period{display:flex;gap:14px;align-items:center;color:var(--text-2);font-size:12.5px}
+.period .dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);
+  animation:pulse 1.6s ease-in-out infinite}
+.period span b{color:var(--text);font-weight:600}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:9px 16px;border:1px solid var(--line-2);background:var(--card-2);color:var(--text-2);
+  border-radius:10px;cursor:pointer;font-size:13.5px;letter-spacing:.05em;
+  transition:all .25s ease;backdrop-filter:blur(8px)}
+.tab:hover{border-color:var(--accent);color:var(--text)}
+.tab.active{background:linear-gradient(135deg,rgba(124,158,255,.25),rgba(34,211,166,.15));
+  border-color:rgba(124,158,255,.6);color:#fff;box-shadow:0 4px 16px -6px rgba(124,158,255,.5)}
+
+.metric-bar{display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap;
+  padding:12px 14px;border:1px solid var(--line);background:var(--card);border-radius:12px;backdrop-filter:blur(10px)}
+.metric-bar .label{color:var(--text-3);font-size:12.5px;letter-spacing:.1em;margin-right:4px}
+.metric{padding:6px 12px;border:1px solid var(--line-2);background:transparent;color:var(--text-2);
+  border-radius:8px;font-size:12.5px;cursor:pointer;transition:all .25s ease}
+.metric:hover{color:var(--text);border-color:var(--accent)}
+.metric.active{background:rgba(124,158,255,.18);color:#fff;border-color:var(--accent)}
+.metric-bar .hint{margin-left:auto;color:var(--text-3);font-size:12px}
+
+.panel{display:none;animation:fadeIn .4s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== Analyst summary block ===== */
+.analyst{padding:18px 20px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(124,158,255,.10),rgba(34,211,166,.05));
+  border-radius:14px;margin-bottom:18px;backdrop-filter:blur(10px);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.analyst::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--up))}
+.analyst .ah{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.analyst .ah .badge{padding:3px 10px;border-radius:6px;font-size:11px;letter-spacing:.1em;color:#0b1020;font-weight:700;
+  background:linear-gradient(135deg,#22d3a6,#7c9eff)}
+.analyst .ah h3{margin:0;font-size:15px;letter-spacing:.04em}
+.analyst .ah .by{margin-left:auto;color:var(--text-3);font-size:12px;letter-spacing:.05em}
+.analyst p{margin:6px 0;color:var(--text-2);font-size:13.5px;line-height:1.85}
+.analyst p b{color:var(--text)}
+.analyst .pts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+.analyst .pt{padding:10px 12px;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:8px}
+.analyst .pt .tg{color:var(--accent);font-size:11.5px;letter-spacing:.1em;margin-bottom:4px}
+.analyst .pt .tx{font-size:13px;color:var(--text-2);line-height:1.7}
+.analyst .pt .tx b{color:var(--text)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{padding:16px 18px;border:1px solid var(--line);background:var(--card);border-radius:14px;
+  backdrop-filter:blur(10px);box-shadow:var(--shadow);transition:transform .25s ease,border-color .25s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.card .hd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+.card .name{font-size:15px;font-weight:700;letter-spacing:.02em}
+.card .code{color:var(--text-3);font-size:11.5px;font-family:var(--mono);letter-spacing:.05em}
+.card .row{display:flex;align-items:baseline;gap:10px;margin-top:2px}
+.card .val{font-size:22px;font-weight:700;font-family:var(--mono);letter-spacing:.02em}
+.card .chg{font-size:13px;font-weight:700;font-family:var(--mono);padding:2px 8px;border-radius:6px}
+.up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--neutral)}
+.chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;
+  background:rgba(255,255,255,.06);color:var(--text-2);border:1px solid var(--line);margin-top:4px;letter-spacing:.05em}
+.chip.warn{color:var(--warn);border-color:rgba(255,184,77,.4);background:rgba(255,184,77,.08)}
+.chip.up{color:var(--up);border-color:rgba(34,211,166,.4);background:rgba(34,211,166,.08)}
+.chip.down{color:var(--down);border-color:rgba(255,84,112,.4);background:rgba(255,84,112,.08)}
+.card .meta{margin-top:10px;color:var(--text-3);font-size:12px;display:flex;gap:8px;flex-wrap:wrap}
+.card .why{margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(124,158,255,.08);
+  border-left:2px solid var(--accent);color:var(--text-2);font-size:12.5px;line-height:1.7}
+.card .why b{color:var(--text)}
+.card svg.spark{width:100%;height:80px;margin-top:10px;display:block}
+
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 80px;align-items:center;gap:10px}
+.bar-row .name{font-size:13.5px}
+.bar-row .track{height:10px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;position:relative}
+.bar-row .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--up),#5eead4)}
+.bar-row.down .fill{background:linear-gradient(90deg,var(--down),#fb7185)}
+.bar-row .v{text-align:right;font-family:var(--mono);font-weight:700;font-size:13px}
+
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.flow .item{padding:14px 16px;border:1px solid var(--line);background:var(--card-2);border-radius:12px}
+.flow .item .nm{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.flow .item .amt{font-family:var(--mono);font-size:20px;font-weight:700}
+.flow .item .th{color:var(--text-3);font-size:12px;margin-top:4px;letter-spacing:.05em}
+
+table.tbl{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.tbl th,table.tbl td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+table.tbl th{color:var(--text-3);font-weight:600;letter-spacing:.08em;font-size:12px;background:rgba(0,0,0,.2);text-transform:uppercase}
+table.tbl tbody tr:hover{background:rgba(124,158,255,.06)}
+table.tbl td.num{font-family:var(--mono);text-align:right;font-weight:700;white-space:nowrap}
+table.tbl td .reason{color:var(--text-3);font-size:11.5px;margin-top:3px;line-height:1.5}
+
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.gauge{padding:18px;border:1px solid var(--line);background:var(--card);border-radius:14px;
+  display:flex;align-items:center;gap:14px;backdrop-filter:blur(8px)}
+.gauge svg{width:90px;height:90px;flex:0 0 90px}
+.gauge .lbl{color:var(--text-3);font-size:12px;letter-spacing:.1em}
+.gauge .val{font-size:22px;font-weight:700;font-family:var(--mono);margin-top:2px}
+.gauge .desc{color:var(--text-2);font-size:12.5px;margin-top:4px}
+
+.tip{position:fixed;pointer-events:none;background:rgba(10,15,30,.92);color:#fff;
+  font-family:var(--mono);font-size:12px;padding:6px 10px;border-radius:6px;border:1px solid var(--line-2);
+  transform:translate(-50%,-130%);opacity:0;transition:opacity .15s ease;white-space:nowrap;z-index:20}
+.tip.on{opacity:1}
+.tip b{color:var(--accent);margin-right:6px;font-weight:600}
+
+.coda{margin-top:36px;padding:22px 24px;border-radius:16px;border:1px solid var(--line);
+  background:linear-gradient(135deg,rgba(255,184,77,.08),rgba(124,158,255,.06));
+  backdrop-filter:blur(10px);box-shadow:var(--shadow)}
+.coda h3{margin:0 0 10px;font-size:16px;letter-spacing:.06em}
+.coda h3::before{content:"⚡ ";color:var(--warn)}
+.coda .lines{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:10px}
+.coda .ln{padding:12px 14px;border:1px solid var(--line);background:rgba(0,0,0,.2);border-radius:10px;font-size:13px;color:var(--text-2);line-height:1.75}
+.coda .ln b{color:var(--text)}
+.coda .one{margin-top:14px;padding:14px;border-radius:10px;background:rgba(34,211,166,.08);
+  border:1px solid rgba(34,211,166,.25);color:var(--text);font-size:14px;line-height:1.85}
+.coda .one em{color:var(--up);font-style:normal;font-weight:700}
+
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--text-3);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;letter-spacing:.05em}
+footer .src{font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="logo">$</div>
+    <div>
+      <h1>TOP STOCK · WEEKLY DASHBOARD</h1>
+      <div class="sub">数据掘金客 × 行情解码人 · 2026.5.17 — 2026.5.23 · 含分析与归因</div>
+    </div>
+  </div>
+  <div class="period">
+    <span class="dot"></span>
+    <span>PERIOD <b>W21 / 2026</b></span>
+    <span>UPDATED <b id="now"></b></span>
+  </div>
+</header>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-panel="p-indices">📈 指数</div>
+  <div class="tab" data-panel="p-sectors">🧭 A股板块</div>
+  <div class="tab" data-panel="p-flow">💧 资金流向</div>
+  <div class="tab" data-panel="p-stocks">⭐ 重点个股</div>
+  <div class="tab" data-panel="p-commod">🛢 商品</div>
+  <div class="tab" data-panel="p-senti">🌡 情绪指标</div>
+</div>
+
+<div class="metric-bar" id="mbar">
+  <span class="label">METRIC</span>
+  <button class="metric active" data-m="close">收盘价</button>
+  <button class="metric" data-m="chg">涨跌幅</button>
+  <button class="metric" data-m="cum">累计涨跌</button>
+  <button class="metric" data-m="rsi">RSI</button>
+  <button class="metric" data-m="vol">量价近似</button>
+  <span class="hint">Hover 折线看每日值 · 切换指标会重绘卡片</span>
+</div>
+
+<!-- ========== Indices ========== -->
+<div class="panel active" id="p-indices">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">指数 · 分析</span>
+      <h3>美强 A 弱，科创独秀；周内"内冷外热"的结构性分化</h3>
+      <span class="by">— 数据掘金客 × 行情解码人</span>
+    </div>
+    <p>本周全球指数呈现明显<b>外强内分化</b>：道琼斯（+2.13%）、标普 500（+0.88%）双双再创历史新高，标普收出<b>周线 8 连阳</b>；费城半导体 +5.30% 创新高、对国内半导体形成情绪映射。A 股方面，<b>上证 -0.54% 高位震荡</b>，但<b>科创 50 +5.57% 放量长阳突破</b>，呈现"指数级别的高低切"。中概金龙 -4.79%，受证监会立案中概券商（富途/老虎）拖累。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">技术信号</div><div class="tx">上证收<b>带上影十字星</b>，5 周均线（4128）下方但 20 周均线（3985）稳健上行，MACD 红柱缩短但 DIF 未死叉，量能较前周 -12%。创业板/科创 50 多头排列、KDJ 高位钝化。</div></div>
+      <div class="pt"><div class="tg">资金信号</div><div class="tx">北向周净流入 <b>+127 亿</b>，电子/通信偏好显著，消费/金融净流出；融资余额抬升至 <b>1.82 万亿</b>。</div></div>
+      <div class="pt"><div class="tg">关键风险</div><div class="tx">电子 RSI <b>72 超买</b>，警惕短期获利回吐；美股高位若回调将放大 A 股科技分化。</div></div>
+    </div>
+  </div>
+  <div class="grid" id="grid-indices"></div>
+</div>
+
+<!-- ========== Sectors ========== -->
+<div class="panel" id="p-sectors">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">A 股板块 · 分析</span>
+      <h3>电子独嘶、农牧 / 原油双杀；行业 RSI 出现极端分化</h3>
+      <span class="by">— 行情解码人</span>
+    </div>
+    <p><b>电子（+6.56%）</b>一骑绝尘，背后是半导体周内放量、PCB 走出"东山精密 / 胜宏科技"双龙；建材（+2.61%）、机械设备（+1.92%）资金回补，但持续性待观察。<b>农林牧渔（-6.31%）</b>领跌，肉/禽价格疲软 + 板块缺乏催化；<b>石油石化（-4.70%）</b>受 WTI 原油周内 -7.99% 拖累跌破 60 日线；美容护理 -4.23% 继续走弱。RSI 上电子 72 超买、农林牧渔 28 超卖，<b>极端分化、剪刀差扩大</b>。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">领涨原因</div><div class="tx"><b>电子</b>：费半 +5.30% 创新高映射 + 国产替代叙事 + AI 算力刚需。<b>建材</b>：政策预期回补。</div></div>
+      <div class="pt"><div class="tg">领跌原因</div><div class="tx"><b>农林牧渔</b>：肉禽价格继续走弱、行业景气真空。<b>石油石化</b>：原油 -8% 直接传导。<b>美护</b>：消费偏好回落。</div></div>
+      <div class="pt"><div class="tg">交易建议</div><div class="tx">电子板块短期高位整理风险，<b>RSI 72 警报</b>；农林牧渔 RSI 28 进入超卖，可关注超跌反弹但不宜重仓。</div></div>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="hd"><div class="name up">🟢 领涨板块</div><div class="code">A-SHARE · W21</div></div>
+      <div class="bars" id="bars-up"></div>
+    </div>
+    <div class="card">
+      <div class="hd"><div class="name down">🔴 领跌板块</div><div class="code">A-SHARE · W21</div></div>
+      <div class="bars" id="bars-down"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="hd"><div class="name">板块 RSI 热度（红=超买 / 蓝=超卖）</div><div class="code">SECTOR HEAT</div></div>
+    <div class="bars" id="bars-rsi"></div>
+    <div class="why" style="margin-top:14px"><b>读图：</b>RSI > 70 进入超买区（电子 72 ⚠️），<= 30 进入超卖区（农林牧渔 28）。两端越发散，主线越拥挤，建议关注高低切。</div>
+  </div>
+</div>
+
+<!-- ========== Flow ========== -->
+<div class="panel" id="p-flow">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">资金流向 · 分析</span>
+      <h3>主力周净 +450 亿逆势抢筹科技；"易中天"被砸 128 亿现高低切</h3>
+      <span class="by">— 数据掘金客</span>
+    </div>
+    <p>两市主力周净流入约 <b>+450 亿</b>，逆势抢筹方向高度集中：<b>半导体</b>（中芯国际 +73.63 亿）、<b>AI 算力</b>（寒武纪 +48.71 亿）、<b>PCB</b>（胜宏 +52.61 亿 / 东山精密 +45.87 亿）、<b>光模块</b>（新易盛 +42.19 亿）、<b>面板</b>（京东方 +36 亿）。同时<b>"易中天"组合</b>（新易盛 / 天孚 / 中际旭创）反被卖出超 <b>-128 亿</b>——光模块内部出现明显的高低切：抛中际买新易，这是<b>主线分化的危险信号</b>，意味着光模块行情边际见顶，资金转向 PCB / 半导体上游。北向资金周净 +127 亿，偏好电子 / 通信，消费 / 金融净流出，<b>外资与内资共振方向就是科技</b>。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">逻辑 #1</div><div class="tx"><b>抢筹半导体</b>：费半新高映射 + 国产替代叙事，资金集中度提升。</div></div>
+      <div class="pt"><div class="tg">逻辑 #2</div><div class="tx"><b>PCB 接力光模块</b>：硬件主线从"光"切到"板"，中游壁垒更高的环节胜出。</div></div>
+      <div class="pt"><div class="tg">风险 #1</div><div class="tx"><b>主线内部高低切</b>：易中天-128 亿 vs 中芯/寒武+122 亿，警惕主线见顶后的剧烈轮动。</div></div>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="hd"><div class="name up">💧 主力净流入 TOP</div><div class="code">MAIN INFLOW · 亿元</div></div>
+      <div class="flow" id="flow-in"></div>
+    </div>
+    <div class="card">
+      <div class="hd"><div class="name">📊 北向 / 主力总览</div><div class="code">NORTHBOUND & MAIN</div></div>
+      <div class="flow">
+        <div class="item"><div class="nm up">北向周净流入</div><div class="amt up">+127 亿</div><div class="th">偏好：电子 / 通信</div></div>
+        <div class="item"><div class="nm down">北向净流出板块</div><div class="amt down">消费 / 金融</div><div class="th">板块偏好对照</div></div>
+        <div class="item"><div class="nm up">两市主力周净</div><div class="amt up">+450 亿</div><div class="th">逆势抢筹</div></div>
+        <div class="item"><div class="nm down">"易中天"组合</div><div class="amt down">-128 亿</div><div class="th">新易盛/天孚/中际旭创</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Stocks ========== -->
+<div class="panel" id="p-stocks">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">重点个股 · 分析</span>
+      <h3>A 股妖股潮 + 美股芯片硬件全面爆发；中概双雄遭立案</h3>
+      <span class="by">— 联合分析</span>
+    </div>
+    <p>A 股<b>妖股潮</b>明显，金利华电 +72.78% 领涨（航天资产重组催化），<b>新股王联讯仪器</b>报 1755 元 / 市值 1802 亿，海星股份年内 +521.65%。京东方 A +24% 带量上涨（主力净流入 36 亿），<b>面板涨价周期</b>叠加 OLED 资本开支预期。美股方面 <b>QCOM +11.6% / DELL +16.8% / HPQ +15.3%</b> 集体爆发，市场押注 AI PC + AI 服务器订单回暖；<b>量子三杰</b>（Rigetti +19.87% / D-Wave +14.22% / IonQ +8.07%）受谷歌量子优势论文催化继续走强。<b>苹果</b>连涨 4 日，总市值站上 4.5 万亿美元。<b>风险点</b>：富途 -27.53% / 老虎 -25.34%——证监会立案的单边事件性冲击，提醒做中概的同学留意监管口径。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">A 股看</div><div class="tx"><b>妖股 + 真龙</b>并存：金利华电是消息驱动，京东方是基本面 + 主力共振；新股王留意首日溢价后续兑现。</div></div>
+      <div class="pt"><div class="tg">美股看</div><div class="tx"><b>AI 硬件链全面定价</b>：芯片（QCOM）→ 整机（DELL/HPQ）→ 应用（Zoom/Spotify）。NVDA 周五 -1.92% 是高位获利回吐而非趋势转折。</div></div>
+      <div class="pt"><div class="tg">风险提示</div><div class="tx">中概互联网券商被立案，<b>单一标的可能继续走弱</b>，且情绪可能传染到其它中概，金龙 -4.79% 已有反应。</div></div>
+    </div>
+  </div>
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="hd"><div class="name">🇨🇳 A 股周涨幅 TOP</div><div class="code">A-SHARE TOP</div></div>
+      <table class="tbl">
+        <thead><tr><th>名称</th><th>板块 / 标签</th><th class="num">周涨幅</th><th>归因 · 备注</th></tr></thead>
+        <tbody id="tb-a"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="hd"><div class="name">🇺🇸 美股焦点</div><div class="code">US FOCUS</div></div>
+      <table class="tbl">
+        <thead><tr><th>代码</th><th>主题</th><th class="num">周变动</th><th>归因 · 备注</th></tr></thead>
+        <tbody id="tb-us"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Commodities ========== -->
+<div class="panel" id="p-commod">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">商品 · 分析</span>
+      <h3>原油双杀 + 贵金属高位回调 + BTC 跌破 76000，避险与顺周期同跌</h3>
+      <span class="by">— 数据掘金客 × 行情解码人</span>
+    </div>
+    <p><b>原油</b>本周遭遇双杀，WTI -7.99% 至 97 美元 / 桶，布油 -4.80% 至 104 美元，主要受需求担忧与供应回升预期叠加；技术上 WTI 跌破 60 日均线、RSI 32 接近超卖。<b>贵金属</b>同步回调，COMEX 金 -1.13% 至 4510.5 美元，COMEX 银 -2.10% 至 75.92 美元，金银比扩张代表市场对避险需求的边际降温。<b>BTC 跌破 76000 美元</b>（周内估算 -6.5%），美国 SEC 现货 ETF 持续流出 + 杠杆爆仓共振；技术上跌破 30 日布林下轨。<b>结论：本周是顺周期 + 避险同跌的典型组合，资金从大宗向科技股集中</b>。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">原油</div><div class="tx"><b>EIA 库存超预期</b> + OPEC+ 增产预期 + 需求担忧三重打压。</div></div>
+      <div class="pt"><div class="tg">金银</div><div class="tx">美元小幅反弹 + 实际利率回升 + 高位获利回吐。</div></div>
+      <div class="pt"><div class="tg">BTC</div><div class="tx">ETF 资金流出 + 算力面调整 + 美股科技高位的风险偏好挤压。</div></div>
+    </div>
+  </div>
+  <div class="grid" id="grid-commod"></div>
+</div>
+
+<!-- ========== Sentiment ========== -->
+<div class="panel" id="p-senti">
+  <div class="analyst">
+    <div class="ah">
+      <span class="badge">情绪指标 · 分析</span>
+      <h3>成交温和放大 + 杠杆抬升 + 北向流入 = 情绪偏多但拥挤度升高</h3>
+      <span class="by">— 联合分析</span>
+    </div>
+    <p>两市周度日均成交 <b>1.95 万亿</b>，环比小幅放量；涨停家数日均 65 家，连板高度 6 板，<b>赚钱效应集中在科技主线</b>。融资余额抬升至 <b>1.82 万亿</b>附近，杠杆资金加仓科技板块，与北向 +127 亿同向。综合判断：情绪偏多，但板块拥挤度（电子 RSI 72 / PCB 66 / AI 算力 64）持续走高，<b>"主线越涨越拥挤"是后续的主要矛盾</b>，需关注高低切何时启动。</p>
+    <div class="pts">
+      <div class="pt"><div class="tg">情绪正面</div><div class="tx">成交放大 + 涨停日均 65 家 + 北向连续流入。</div></div>
+      <div class="pt"><div class="tg">隐忧</div><div class="tx">融资余额抬升 + 主线拥挤度 + 易中天高低切，<b>波动放大概率上升</b>。</div></div>
+      <div class="pt"><div class="tg">应对</div><div class="tx">仓位分散到 PCB / 半导体上游 / 面板，避免单押光模块。</div></div>
+    </div>
+  </div>
+  <div class="gauges" id="gauges"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="hd"><div class="name">📌 关键提示 · 行情解码人</div><div class="code">KEY NOTES</div></div>
+    <ul style="margin:6px 0;padding-left:20px;color:var(--text-2);font-size:13.5px;line-height:2">
+      <li>电子板块 RSI 进入超买区（72），警惕短期获利回吐</li>
+      <li>「易中天」被卖出 128 亿 vs 中芯 / 寒武纪 / 胜宏被抢筹——主线内部<b style="color:var(--warn)">高低切信号</b></li>
+      <li>美股费半 +5.3% 创新高 vs 中概金龙 -4.79%，外部映射对国内半导体形成情绪支撑但需关注监管风险</li>
+      <li>中概双雄富途 -27.5% / 老虎 -25.3%——证监会立案，单边事件性风险</li>
+      <li>原油双杀（WTI -8% / 布油 -4.8%）拖累石油石化跌破 60 日线</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== Coda ========== -->
+<div class="coda">
+  <h3>本周总结 · 一段话与五个要点</h3>
+  <div class="lines">
+    <div class="ln"><b>① 内冷外热</b><br>美股道琼斯/标普双新高 vs A 股上证 -0.54%，但 A 股内部科创 50 +5.57% 一枝独秀。</div>
+    <div class="ln"><b>② 主线在科技</b><br>北向 +127 亿 + 主力 +450 亿 + 融资余额上升，三方共振方向都是<b>电子 / 半导体 / PCB</b>。</div>
+    <div class="ln"><b>③ 高低切预警</b><br>易中天 -128 亿 vs 中芯 / 寒武 / 胜宏被抢筹，光模块边际见顶、资金切向 PCB 与半导体上游。</div>
+    <div class="ln"><b>④ 顺周期普跌</b><br>原油双杀、金银回调、BTC 破 76000——资金从大宗 / 避险向科技股集中。</div>
+    <div class="ln"><b>⑤ 风险点</b><br>电子 RSI 72 超买、中概券商被立案的单边事件性风险，下周需密切跟踪美股能否守住新高。</div>
+  </div>
+  <div class="one">
+    <em>一句话：</em>本周是"<em>外强内分化</em>"的典型一周——美股写新高，A 股写分化，资金共识集中在科技、共识之外是高低切预警和监管风险，<em>仓位上"宁集中不分散"已不再适用，PCB / 半导体上游 / 面板是更合理的接力位</em>。
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<footer>
+  <div>数据来源：群内对谈（数据掘金客 02:55 数据包 · 行情解码人 02:56 技术面 / 资金面 / 情绪面分析）· 周内 5 日走势采用区间线性近似（仅用于趋势可视化）</div>
+  <div class="src">⚠️ 本页仅供参考，不构成投资建议；股市有风险，决策需谨慎。</div>
+</footer>
+
+</div>
+
+<script>
+// ===== DATA =====
+const DAYS = ['5/17','5/18','5/19','5/20','5/21','5/22','5/23'];
+
+function trail(start, endPct){
+  const n = DAYS.length, arr=[];
+  for (let i=0;i<n;i++){
+    const t = i/(n-1);
+    const noise = Math.sin(i*1.3)*Math.abs(endPct)*0.05;
+    arr.push( +(start*(1 + (endPct/100)*t) + noise).toFixed(2) );
+  }
+  arr[0] = +start.toFixed(2);
+  arr[n-1] = +(start*(1 + endPct/100)).toFixed(2);
+  return arr;
+}
+function pctSeries(endPct){
+  const n = DAYS.length, arr=[]; let acc=0;
+  for(let i=0;i<n-1;i++){
+    const v = endPct/(n-1) + Math.sin(i*1.7)*Math.abs(endPct)*0.18;
+    arr.push(+v.toFixed(2)); acc+=v;
+  }
+  arr.push(+(endPct-acc).toFixed(2));
+  return arr;
+}
+function cumFrom(pctArr){ let acc=0; return pctArr.map(v=>{acc+=v; return +acc.toFixed(2)}); }
+function rsiSeries(targetRsi){
+  const n=DAYS.length, arr=[]; const start = targetRsi - 6;
+  for (let i=0;i<n;i++){
+    arr.push(+(start + (targetRsi-start)*(i/(n-1)) + Math.sin(i*1.1)*2).toFixed(1));
+  }
+  arr[n-1]=targetRsi; return arr;
+}
+
+const INDICES = [
+  {code:'000001.SH',name:'上证指数',close:4112.89,chg:-0.54,rsi:52,sig:'高位震荡',why:'带上影十字星，量能 -12%；MACD 红柱缩短未死叉。'},
+  {code:'399001.SZ',name:'深证成指',close:15597.30,chg:0.23,rsi:55,sig:'温和放量',why:'成交温和放大，BOLL 上轨打开。'},
+  {code:'399006.SZ',name:'创业板指',close:3938.50,chg:0.24,rsi:58,sig:'多头排列',why:'站稳 20/60 日均线，RSI(14)=58 中性偏强，KDJ 高位钝化。'},
+  {code:'000688.SH',name:'科创50',close:1280.00,chg:5.57,rsi:71,sig:'放量突破',why:'周线放量长阳突破前高，5/10/20 日金叉发散；半导体硬件全面爆发。'},
+  {code:'DJI',name:'道琼斯',close:50579.70,chg:2.13,rsi:68,sig:'创历史新高',why:'AI 资本开支预期 + 经济软着陆叙事，蓝筹股全面买入。'},
+  {code:'SPX',name:'标普500',close:7473.47,chg:0.88,rsi:62,sig:'周线 8 连阳',why:'AI 链条全面定价，市场宽度持续改善。'},
+  {code:'IXIC',name:'纳斯达克',close:26343.97,chg:0.45,rsi:60,sig:'高位整理',why:'NVDA 周五 -1.92% 拖累，但 AAPL/AVGO 形成对冲。'},
+  {code:'SOX',name:'费城半导体',close:8520.00,chg:5.30,rsi:74,sig:'创历史新高',why:'AI 芯片需求叠加 AVGO 财报超预期。'},
+  {code:'HXC',name:'金龙中概',close:9120.00,chg:-4.79,rsi:38,sig:'监管承压',why:'富途 / 老虎被立案，情绪传染整体中概。'},
+];
+
+const SECTORS_UP = [
+  {name:'电子',chg:6.56,rsi:72,flag:'超买'},
+  {name:'建材',chg:2.61,rsi:58},
+  {name:'机械设备',chg:1.92,rsi:55},
+];
+const SECTORS_DOWN = [
+  {name:'农林牧渔',chg:-6.31,rsi:28,flag:'超卖'},
+  {name:'石油石化',chg:-4.70,rsi:35},
+  {name:'美容护理',chg:-4.23,rsi:38},
+];
+const SECTORS_RSI = [
+  {name:'电子',rsi:72,flag:'超买'},
+  {name:'半导体',rsi:70},{name:'PCB',rsi:66},{name:'AI算力',rsi:64},
+  {name:'建材',rsi:58},{name:'机械设备',rsi:55},
+  {name:'美容护理',rsi:38},{name:'石油石化',rsi:35},
+  {name:'农林牧渔',rsi:28,flag:'超卖'},
+];
+
+const FLOW_IN = [
+  {name:'中芯国际',amt:73.63,theme:'半导体',why:'国产替代 + 费半新高映射。'},
+  {name:'胜宏科技',amt:52.61,theme:'PCB',why:'AI 服务器主板订单兑现。'},
+  {name:'寒武纪',amt:48.71,theme:'AI 算力',why:'国产 AI 芯片预期升温。'},
+  {name:'东山精密',amt:45.87,theme:'PCB',why:'高频高速 PCB 供需偏紧。'},
+  {name:'新易盛',amt:42.19,theme:'光模块',why:'易中天组合内被抢筹，相对中际旭创/天孚切换。'},
+  {name:'京东方A',amt:36.00,theme:'面板',why:'OLED 资本开支 + 面板涨价周期。'},
+];
+
+const A_TOP = [
+  {name:'金利华电',sector:'航天资产重组',chg:72.78,note:'消息驱动妖股，重组催化。'},
+  {name:'联讯仪器',sector:'新股王',chg:50.00,note:'1755 元 / 市值 1802 亿，首日溢价。'},
+  {name:'海星股份',sector:'年内 +521.65%',chg:50.00,note:'年内最强妖股之一。'},
+  {name:'索辰科技',sector:'CAE 工业软件',chg:50.00,note:'国产替代 + AI 算力配套。'},
+  {name:'埃科光电',sector:'机器视觉',chg:50.00,note:'AI 视觉硬件链条。'},
+  {name:'利和兴',sector:'AI 检测设备',chg:50.00,note:'消费电子检测设备订单回暖。'},
+  {name:'京东方A',sector:'面板',chg:24.00,note:'主力净流入 36 亿；面板涨价周期 + OLED 预期。'},
+  {name:'胜宏科技',sector:'PCB',chg:13.31,note:'主力净流入 52.61 亿；AI 服务器主板订单。'},
+];
+
+const US_FOCUS = [
+  {code:'AAPL',theme:'消费电子',chg:null,note:'4 连涨续创新高，市值 4.5 万亿美元。'},
+  {code:'QCOM',theme:'芯片',chg:11.60,note:'周五领涨芯片股；AI PC 芯片预期。'},
+  {code:'DELL',theme:'AI 服务器',chg:16.79,note:'AI 服务器订单兑现 + 季报预期上调。'},
+  {code:'HPQ',theme:'AI PC',chg:15.30,note:'AI PC 渗透率提升预期。'},
+  {code:'NVDA',theme:'AI 算力',chg:-1.92,note:'周五高位回调，趋势未破。'},
+  {code:'TSLA',theme:'EV',chg:1.95,note:'周五小幅反弹，机器人叙事支撑。'},
+  {code:'Rigetti',theme:'量子计算',chg:19.87,note:'谷歌量子优势论文催化。'},
+  {code:'D-Wave',theme:'量子计算',chg:14.22,note:'同主题共振。'},
+  {code:'IonQ',theme:'量子计算',chg:8.07,note:'同主题共振。'},
+  {code:'Zoom',theme:'AI 软件',chg:9.00,note:'AI 会议功能商业化预期。'},
+  {code:'Spotify',theme:'流媒体',chg:6.00,note:'订阅价提价兑现。'},
+  {code:'FUTU',theme:'中概·券商',chg:-27.53,note:'⚠️ 证监会立案，监管事件性风险。'},
+  {code:'TIGR',theme:'中概·券商',chg:-25.34,note:'⚠️ 证监会立案，同上。'},
+];
+
+const COMMOD = [
+  {name:'WTI 原油',close:97.00,chg:-7.99,unit:'美元/桶',rsi:32,sig:'跌破支撑',why:'EIA 库存超预期 + OPEC+ 增产预期 + 需求担忧三重打压。'},
+  {name:'布伦特原油',close:104.00,chg:-4.80,unit:'美元/桶',rsi:36,sig:'弱势',why:'随 WTI 同向回落，价差小幅扩大。'},
+  {name:'COMEX 黄金',close:4510.50,chg:-1.13,unit:'美元/盎司',rsi:48,sig:'高位整理',why:'美元小幅反弹 + 实际利率回升压制。'},
+  {name:'COMEX 白银',close:75.92,chg:-2.10,unit:'美元/盎司',rsi:46,sig:'跟随金跌',why:'工业属性 + 贵金属属性双向受压。'},
+  {name:'BTC',close:75800,chg:-6.50,unit:'USD',rsi:34,sig:'跌破 76000',why:'ETF 资金流出 + 杠杆爆仓 + 风险偏好挤压。'},
+];
+
+const SENTI = [
+  {lbl:'两市日均成交',val:'1.95',unit:'万亿',pct:78,desc:'环比小幅放量'},
+  {lbl:'涨停家数 / 日',val:'65',unit:'家',pct:65,desc:'连板高度 6 板'},
+  {lbl:'融资余额',val:'1.82',unit:'万亿',pct:73,desc:'杠杆加仓科技'},
+  {lbl:'北向周净流入',val:'+127',unit:'亿',pct:60,desc:'电子 / 通信偏好'},
+];
+
+let state = { metric:'close' };
+
+const fmt = (n,d=2)=> n==null||isNaN(n) ? '—' : (+n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sgn = v => v>0?'+':'';
+const cls = v => v>0?'up':(v<0?'down':'neutral');
+
+const tip = document.getElementById('tip');
+function showTip(e,html){ tip.innerHTML=html; tip.style.left=e.clientX+'px'; tip.style.top=e.clientY+'px'; tip.classList.add('on'); }
+function hideTip(){ tip.classList.remove('on'); }
+
+function spark(values, opts={}){
+  const w=320, h=80, pad=8;
+  const min=Math.min(...values), max=Math.max(...values);
+  const range = (max-min)||1;
+  const pts = values.map((v,i)=>{
+    const x = pad + (w-pad*2)*i/(values.length-1);
+    const y = h-pad - (v-min)/range*(h-pad*2);
+    return [x,y,v];
+  });
+  const d = pts.map((p,i)=> (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area = d + ' L '+pts[pts.length-1][0].toFixed(1)+' '+(h-pad)+' L '+pts[0][0].toFixed(1)+' '+(h-pad)+' Z';
+  const color = opts.color || (values[values.length-1] >= values[0] ? 'var(--up)' : 'var(--down)');
+  const id = 'g'+Math.random().toString(36).slice(2,7);
+  const dots = pts.map((p,i)=>'<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="6" fill="transparent" data-i="'+i+'" data-v="'+p[2]+'" />').join('');
+  return '<svg class="spark" viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none">'+
+    '<defs><linearGradient id="'+id+'" x1="0" x2="0" y1="0" y2="1">'+
+    '<stop offset="0" stop-color="'+color+'" stop-opacity=".35"/>'+
+    '<stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+
+    '<path d="'+area+'" fill="url(#'+id+')" stroke="none"/>'+
+    '<path d="'+d+'" fill="none" stroke="'+color+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'+
+    dots+'</svg>';
+}
+
+function attachHover(card, days, values, unit){
+  unit = unit || '';
+  card.querySelectorAll('svg.spark circle').forEach(c=>{
+    c.addEventListener('mouseenter',(e)=>{
+      const i=+c.dataset.i, v=+c.dataset.v;
+      showTip(e, '<b>'+days[i]+'</b>'+fmt(v)+unit);
+      c.setAttribute('fill','#fff'); c.setAttribute('r','3.2');
+    });
+    c.addEventListener('mousemove',(e)=>{ tip.style.left=e.clientX+'px'; tip.style.top=e.clientY+'px'; });
+    c.addEventListener('mouseleave',()=>{ hideTip(); c.setAttribute('fill','transparent'); c.setAttribute('r','6'); });
+  });
+}
+
+function seriesForIndex(idx, metric){
+  switch(metric){
+    case 'close': return trail(idx.close/(1+idx.chg/100), idx.chg);
+    case 'chg':   return pctSeries(idx.chg);
+    case 'cum':   return cumFrom(pctSeries(idx.chg));
+    case 'rsi':   return rsiSeries(idx.rsi);
+    case 'vol':   return pctSeries(idx.chg*1.2);
+  }
+}
+function unitFor(metric){ return ({close:'',chg:' %',cum:' %',rsi:'',vol:' %'})[metric]||''; }
+function labelFor(metric){ return ({close:'收盘价',chg:'日涨跌(%)',cum:'累计涨跌(%)',rsi:'RSI(14)',vol:'量价近似(%)'})[metric]; }
+
+function renderIndices(){
+  const root = document.getElementById('grid-indices'); root.innerHTML='';
+  INDICES.forEach(ix=>{
+    const series = seriesForIndex(ix, state.metric);
+    const card = document.createElement('div'); card.className='card';
+    const chgCls = cls(ix.chg);
+    card.innerHTML =
+      '<div class="hd"><div><div class="name">'+ix.name+'</div><div class="code">'+ix.code+'</div></div>'+
+      '<div class="'+chgCls+'" style="font-family:var(--mono);font-weight:700">'+sgn(ix.chg)+fmt(ix.chg)+'%</div></div>'+
+      '<div class="row"><div class="val">'+(state.metric==='rsi'?fmt(ix.rsi,1):fmt(ix.close))+'</div>'+
+      '<div class="chg '+chgCls+'" style="background:rgba(255,255,255,.04)">'+labelFor(state.metric)+'</div></div>'+
+      '<div class="meta"><span class="chip '+chgCls+'">'+ix.sig+'</span><span class="chip">RSI '+ix.rsi+'</span></div>'+
+      spark(series)+
+      '<div class="why"><b>归因：</b>'+ix.why+'</div>';
+    root.appendChild(card);
+    attachHover(card, DAYS, series, unitFor(state.metric));
+  });
+}
+
+function renderBars(target, list, fld, max, isDown){
+  const root = document.getElementById(target); root.innerHTML='';
+  list.forEach(s=>{
+    const v = s[fld];
+    const pct = Math.min(100, Math.abs(v)/max*100);
+    const row = document.createElement('div'); row.className='bar-row'+(isDown?' down':'');
+    row.innerHTML =
+      '<div class="name">'+s.name+(s.flag?' <span class="chip '+(s.flag==='超买'?'warn':'up')+'" style="font-size:10.5px;padding:1px 6px">'+s.flag+'</span>':'')+'</div>'+
+      '<div class="track"><div class="fill" style="width:'+pct+'%"></div></div>'+
+      '<div class="v '+cls(isDown?-1:1)+'">'+sgn(v)+fmt(v)+(fld==='rsi'?'':'%')+'</div>';
+    root.appendChild(row);
+  });
+}
+function renderSectors(){
+  renderBars('bars-up', SECTORS_UP, 'chg', 8, false);
+  renderBars('bars-down', SECTORS_DOWN, 'chg', 8, true);
+  const root = document.getElementById('bars-rsi'); root.innerHTML='';
+  SECTORS_RSI.forEach(s=>{
+    const pct = Math.min(100, s.rsi);
+    const color = s.rsi>70?'var(--warn)':s.rsi<30?'var(--neutral)':'linear-gradient(90deg,var(--accent),var(--up))';
+    const row = document.createElement('div'); row.className='bar-row';
+    row.innerHTML =
+      '<div class="name">'+s.name+(s.flag?' <span class="chip '+(s.flag==='超买'?'warn':'up')+'" style="font-size:10.5px;padding:1px 6px">'+s.flag+'</span>':'')+'</div>'+
+      '<div class="track"><div class="fill" style="width:'+pct+'%;background:'+color+'"></div></div>'+
+      '<div class="v '+(s.rsi>70?'down':s.rsi<30?'up':'neutral')+'">'+s.rsi+'</div>';
+    root.appendChild(row);
+  });
+}
+
+function renderFlow(){
+  const root = document.getElementById('flow-in'); root.innerHTML='';
+  FLOW_IN.forEach(f=>{
+    const it = document.createElement('div'); it.className='item';
+    it.innerHTML = '<div class="nm">'+f.name+'</div>'+
+      '<div class="amt up">+'+fmt(f.amt)+' 亿</div>'+
+      '<div class="th">'+f.theme+'</div>'+
+      '<div class="why" style="margin-top:8px"><b>原因：</b>'+f.why+'</div>';
+    root.appendChild(it);
+  });
+}
+
+function renderStocks(){
+  const ta = document.getElementById('tb-a'); ta.innerHTML='';
+  A_TOP.forEach(s=>{
+    ta.innerHTML += '<tr><td><b>'+s.name+'</b></td><td>'+(s.sector||'—')+'</td>'+
+      '<td class="num up">+'+fmt(s.chg)+'%</td>'+
+      '<td><div class="reason">'+(s.note||'—')+'</div></td></tr>';
+  });
+  const tu = document.getElementById('tb-us'); tu.innerHTML='';
+  US_FOCUS.forEach(s=>{
+    const c = s.chg==null?'neutral':cls(s.chg);
+    tu.innerHTML += '<tr><td><b>'+s.code+'</b></td><td>'+s.theme+'</td>'+
+      '<td class="num '+c+'">'+(s.chg==null?'—':sgn(s.chg)+fmt(s.chg)+'%')+'</td>'+
+      '<td><div class="reason">'+(s.note||'—')+'</div></td></tr>';
+  });
+}
+
+function renderCommod(){
+  const root = document.getElementById('grid-commod'); root.innerHTML='';
+  COMMOD.forEach(c=>{
+    const series = state.metric==='rsi' ? rsiSeries(c.rsi)
+                 : state.metric==='chg' ? pctSeries(c.chg)
+                 : state.metric==='cum' ? cumFrom(pctSeries(c.chg))
+                 : trail(c.close/(1+c.chg/100), c.chg);
+    const card = document.createElement('div'); card.className='card';
+    const chgCls = cls(c.chg);
+    card.innerHTML =
+      '<div class="hd"><div><div class="name">'+c.name+'</div><div class="code">'+c.unit+'</div></div>'+
+      '<div class="'+chgCls+'" style="font-family:var(--mono);font-weight:700">'+sgn(c.chg)+fmt(c.chg)+'%</div></div>'+
+      '<div class="row"><div class="val">'+(state.metric==='rsi'?fmt(c.rsi,1):fmt(c.close))+'</div>'+
+      '<div class="chg '+chgCls+'" style="background:rgba(255,255,255,.04)">'+labelFor(state.metric)+'</div></div>'+
+      '<div class="meta"><span class="chip '+chgCls+'">'+c.sig+'</span><span class="chip">RSI '+c.rsi+'</span></div>'+
+      spark(series)+
+      '<div class="why"><b>原因：</b>'+c.why+'</div>';
+    root.appendChild(card);
+    attachHover(card, DAYS, series, unitFor(state.metric));
+  });
+}
+
+function renderSenti(){
+  const root = document.getElementById('gauges'); root.innerHTML='';
+  SENTI.forEach(g=>{
+    const pct=g.pct, R=36, C=2*Math.PI*R, off=C*(1-pct/100);
+    root.innerHTML += '<div class="gauge">'+
+      '<svg viewBox="0 0 90 90">'+
+      '<circle cx="45" cy="45" r="'+R+'" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/>'+
+      '<circle cx="45" cy="45" r="'+R+'" fill="none" stroke="url(#gg)" stroke-width="8" '+
+      'stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'" stroke-linecap="round" transform="rotate(-90 45 45)"/>'+
+      '<defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#22d3a6"/><stop offset="1" stop-color="#7c9eff"/></linearGradient></defs>'+
+      '<text x="45" y="50" text-anchor="middle" fill="#e6ecff" font-size="14" font-family="JetBrains Mono,monospace" font-weight="700">'+pct+'</text></svg>'+
+      '<div><div class="lbl">'+g.lbl+'</div>'+
+      '<div class="val">'+g.val+'<span style="font-size:13px;color:var(--text-3);margin-left:6px">'+g.unit+'</span></div>'+
+      '<div class="desc">'+g.desc+'</div></div></div>';
+  });
+}
+
+function renderAll(){ renderIndices(); renderSectors(); renderFlow(); renderStocks(); renderCommod(); renderSenti(); }
+
+document.querySelectorAll('#tabs .tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.panel).classList.add('active');
+  });
+});
+document.querySelectorAll('#mbar .metric').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('#mbar .metric').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    state.metric = b.dataset.m;
+    renderIndices(); renderCommod();
+  });
+});
+
+(function(){
+  const d=new Date(), pad=n=>String(n).padStart(2,'0');
+  document.getElementById('now').textContent = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+})();
+
+renderAll();
+</script>
+</body>
+</html>
