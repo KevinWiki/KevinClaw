@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全球时间 & 天气</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0e1a;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.07);
+  --surface-active: rgba(79,142,247,0.12);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+  --border-accent: rgba(79,142,247,0.5);
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --accent: #4f8ef7;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Space Grotesk', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+
+.stars {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 12%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 68%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 8%  82%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 58%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 45%, rgba(255,255,255,.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 68% 88%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 28% 18%, rgba(255,255,255,.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 82% 32%, rgba(255,255,255,.15) 0%, transparent 100%),
+    radial-gradient(2px 2px at 42% 92%, rgba(255,255,255,.15) 0%, transparent 100%);
+}
+
+/* header */
+header {
+  position: relative; z-index: 10;
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(79,142,247,.4)}
+  50%{opacity:.8;transform:scale(1.1);box-shadow:0 0 0 6px rgba(79,142,247,0)}
+}
+.logo-text { font-size: 15px; font-weight: 500; letter-spacing: .05em; }
+.logo-text span { color: var(--accent); }
+.header-right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.header-meta { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align:right; line-height:1.8; }
+#addBtn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface-active); border: 1px solid var(--border-accent);
+  color: var(--accent); border-radius: 10px;
+  padding: 7px 14px; font-size: 13px; font-family: var(--sans);
+  cursor: pointer; transition: background .15s;
+}
+#addBtn:hover { background: rgba(79,142,247,.2); }
+#addBtn svg { flex-shrink:0; }
+
+/* tz arc */
+.tz-arc-wrap {
+  position: relative; z-index: 10; padding: 1rem 2rem 0; overflow: hidden;
+}
+.tz-arc-inner { display:flex; gap:3px; align-items:flex-end; height:32px; }
+.tz-bar {
+  flex:1; border-radius:2px 2px 0 0; opacity:.4;
+  transition: opacity .4s, height .4s; min-width:0;
+}
+.tz-bar.active { opacity:1; }
+.tz-label-row {
+  display:flex; justify-content:space-between;
+  padding-top:5px; font-family:var(--mono); font-size:10px; color:var(--muted);
+}
+
+/* main grid */
+main {
+  position: relative; z-index: 10;
+  padding: 1.5rem 2rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+/* card */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.1rem 1.2rem;
+  transition: background .2s, border-color .2s, transform .2s;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  position: relative;
+}
+.card:hover { background: var(--surface-hover); border-color: var(--border-hover); transform: translateY(-2px); }
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.card-flag { font-size:20px; line-height:1; }
+.card-info { flex:1; margin-left:10px; }
+.card-name { font-size:14px; font-weight:500; color:var(--text); }
+.card-region { font-size:11px; color:var(--muted); margin-top:2px; }
+.card-badge {
+  font-size:10px; font-weight:500; letter-spacing:.04em;
+  padding:3px 8px; border-radius:20px; white-space:nowrap; align-self:flex-start;
+}
+.card-remove {
+  position:absolute; top:10px; right:10px;
+  width:22px; height:22px; border-radius:50%; border:none;
+  background: rgba(255,255,255,.06); color: var(--muted);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; opacity:0; transition:opacity .15s, background .15s;
+  font-size:14px; line-height:1;
+}
+.card:hover .card-remove { opacity:1; }
+.card-remove:hover { background:rgba(239,68,68,.25); color:#f87171; }
+.card-time { font-family:var(--mono); font-size:30px; font-weight:700; color:var(--text); letter-spacing:-1px; line-height:1; }
+.card-seconds { font-size:17px; font-weight:400; opacity:.4; }
+.card-date { font-size:11px; color:var(--muted); margin-top:5px; letter-spacing:.03em; }
+.card-divider { border:none; border-top:1px solid var(--border); margin:12px 0; }
+.card-weather { display:flex; align-items:center; gap:10px; }
+.weather-emoji { font-size:20px; }
+.weather-right { flex:1; }
+.weather-temp { font-family:var(--mono); font-size:19px; font-weight:700; color:var(--text); }
+.weather-desc { font-size:11px; color:var(--muted); margin-top:2px; }
+.weather-extra { text-align:right; font-size:11px; color:var(--muted); line-height:1.8; }
+.weather-loading { font-size:11px; color:var(--muted); font-style:italic; }
+
+.badge-hot   { background:rgba(249,115,22,.15); color:#fb923c; border:1px solid rgba(249,115,22,.25); }
+.badge-humid { background:rgba(168,85,247,.15);  color:#c084fc; border:1px solid rgba(168,85,247,.25); }
+.badge-warm  { background:rgba(234,179,8,.15);   color:#fbbf24; border:1px solid rgba(234,179,8,.25); }
+.badge-cool  { background:rgba(56,189,248,.15);  color:#7dd3fc; border:1px solid rgba(56,189,248,.25); }
+.badge-nice  { background:rgba(34,197,94,.15);   color:#4ade80; border:1px solid rgba(34,197,94,.25); }
+
+/* empty state */
+#emptyState {
+  grid-column: 1/-1;
+  text-align:center; padding:4rem 2rem; color:var(--muted);
+  display:none;
+}
+#emptyState p { margin-top:.5rem; font-size:13px; }
+
+/* modal overlay */
+.modal-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:1rem;
+  opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal {
+  background:#111827; border:1px solid var(--border-hover);
+  border-radius:20px; width:100%; max-width:560px;
+  max-height:85vh; overflow:hidden;
+  display:flex; flex-direction:column;
+  transform:translateY(16px); transition:transform .2s;
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal-header {
+  padding:1.25rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.modal-header h2 { font-size:16px; font-weight:500; }
+.modal-close {
+  width:30px; height:30px; border-radius:8px; border:none;
+  background:var(--surface); color:var(--muted);
+  cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+.modal-close:hover { background:var(--surface-hover); color:var(--text); }
+
+.modal-search-wrap { padding:1rem 1.5rem; border-bottom:1px solid var(--border); }
+#citySearch {
+  width:100%; background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:9px 14px;
+  color:var(--text); font-family:var(--sans); font-size:14px;
+  outline:none; transition:border-color .15s;
+}
+#citySearch::placeholder { color:var(--muted); }
+#citySearch:focus { border-color:var(--border-accent); }
+
+.modal-regions {
+  display:flex; gap:8px; flex-wrap:wrap; padding:1rem 1.5rem .5rem;
+}
+.region-tab {
+  font-size:12px; padding:4px 12px; border-radius:20px;
+  border:1px solid var(--border); background:transparent;
+  color:var(--muted); cursor:pointer; font-family:var(--sans);
+  transition:all .15s;
+}
+.region-tab:hover { border-color:var(--border-hover); color:var(--text); }
+.region-tab.active { background:var(--surface-active); border-color:var(--border-accent); color:var(--accent); }
+
+.modal-list {
+  overflow-y:auto; padding:.5rem 1rem 1.5rem;
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+}
+.modal-list::-webkit-scrollbar { width:5px; }
+.modal-list::-webkit-scrollbar-track { background:transparent; }
+.modal-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); border-radius:3px; }
+
+.city-option {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:10px;
+  border:1px solid var(--border);
+  cursor:pointer; transition:all .15s;
+  background:var(--surface);
+}
+.city-option:hover { background:var(--surface-hover); border-color:var(--border-hover); }
+.city-option.added { background:var(--surface-active); border-color:var(--border-accent); }
+.city-option.added .opt-check { display:flex; }
+.city-option.added .opt-add { display:none; }
+.opt-flag { font-size:18px; flex-shrink:0; }
+.opt-info { flex:1; min-width:0; }
+.opt-name { font-size:13px; font-weight:500; color:var(--text); }
+.opt-region { font-size:11px; color:var(--muted); }
+.opt-check {
+  width:20px; height:20px; border-radius:50%;
+  background:rgba(34,197,94,.2); color:#4ade80;
+  display:none; align-items:center; justify-content:center;
+  font-size:11px; flex-shrink:0;
+}
+.opt-add {
+  width:20px; height:20px; border-radius:50%;
+  background:rgba(79,142,247,.15); color:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0;
+}
+
+#noResults { grid-column:1/-1; text-align:center; color:var(--muted); font-size:13px; padding:2rem; display:none; }
+
+footer {
+  position:relative; z-index:10;
+  text-align:center; padding:1.5rem;
+  font-size:11px; color:var(--muted);
+  border-top:1px solid var(--border);
+  font-family:var(--mono);
+}
+footer span { color:var(--accent); }
+.blink { display:inline-block; width:6px; height:6px; border-radius:50%; background:#22c55e; margin-right:6px; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+@media(max-width:600px){
+  header,main,.tz-arc-wrap{padding-left:1rem;padding-right:1rem}
+  .modal-list{grid-template-columns:1fr}
+  .card-time{font-size:26px}
+}
+@media(prefers-reduced-motion:reduce){ .card,.logo-dot,.blink{animation:none;transition:none} }
+</style>
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot" aria-hidden="true"></div>
+    <div class="logo-text">WORLD <span>CLOCK</span></div>
+  </div>
+  <div class="header-right">
+    <button id="addBtn" onclick="openModal()" aria-label="添加城市">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      添加城市
+    </button>
+    <div class="header-meta">
+      <div><span class="blink" aria-hidden="true"></span>实时更新</div>
+      <div id="localTime">—</div>
+    </div>
+  </div>
+</header>
+
+<div class="tz-arc-wrap" aria-hidden="true">
+  <div class="tz-arc-inner" id="tzArc"></div>
+  <div class="tz-label-row">
+    <span>UTC−12</span><span>UTC−6</span><span>UTC 0</span><span>UTC+6</span><span>UTC+12</span>
+  </div>
+</div>
+
+<main id="grid" aria-label="全球城市时间与天气">
+  <div id="emptyState">
+    <div style="font-size:2rem" aria-hidden="true">🌍</div>
+    <p>点击「添加城市」开始添加你想关注的地区</p>
+  </div>
+</main>
+
+<footer>
+  <span class="blink" aria-hidden="true"></span>
+  时钟每秒刷新 · 天气每10分钟更新 · 数据来源 <span>Open-Meteo API</span>
+  · <span id="weatherStatus">等待加载…</span>
+</footer>
+
+<!-- modal -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="选择城市">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>选择城市</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="关闭">✕</button>
+    </div>
+    <div class="modal-search-wrap">
+      <input type="search" id="citySearch" placeholder="搜索城市或国家…" oninput="filterCities()" autocomplete="off">
+    </div>
+    <div class="modal-regions" id="regionTabs"></div>
+    <div class="modal-list" id="cityList">
+      <div id="noResults">没有找到匹配的城市</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── city database ──────────────────────────────────────────────────────
+const ALL_CITIES = [
+  // 东亚
+  {id:"beijing",    name:"北京",    region:"中国",     area:"东亚", flag:"🇨🇳", tz:"Asia/Shanghai",      lat:39.9,  lon:116.4},
+  {id:"shanghai",   name:"上海",    region:"中国",     area:"东亚", flag:"🇨🇳", tz:"Asia/Shanghai",      lat:31.2,  lon:121.5},
+  {id:"guangzhou",  name:"广州",    region:"中国",     area:"东亚", flag:"🇨🇳", tz:"Asia/Shanghai",      lat:23.1,  lon:113.3},
+  {id:"chengdu",    name:"成都",    region:"中国",     area:"东亚", flag:"🇨🇳", tz:"Asia/Shanghai",      lat:30.7,  lon:104.1},
+  {id:"hongkong",   name:"香港",    region:"中国香港", area:"东亚", flag:"🇭🇰", tz:"Asia/Hong_Kong",     lat:22.3,  lon:114.2},
+  {id:"taipei",     name:"台北",    region:"中国台湾", area:"东亚", flag:"🇹🇼", tz:"Asia/Taipei",        lat:25.0,  lon:121.5},
+  {id:"tokyo",      name:"东京",    region:"日本",     area:"东亚", flag:"🇯🇵", tz:"Asia/Tokyo",         lat:35.7,  lon:139.7},
+  {id:"osaka",      name:"大阪",    region:"日本",     area:"东亚", flag:"🇯🇵", tz:"Asia/Tokyo",         lat:34.7,  lon:135.5},
+  {id:"seoul",      name:"首尔",    region:"韩国",     area:"东亚", flag:"🇰🇷", tz:"Asia/Seoul",         lat:37.6,  lon:127.0},
+  {id:"ulaanbaatar",name:"乌兰巴托",region:"蒙古",     area:"东亚", flag:"🇲🇳", tz:"Asia/Ulaanbaatar",   lat:47.9,  lon:106.9},
+  // 东南亚
+  {id:"singapore",  name:"新加坡",  region:"新加坡",   area:"东南亚",flag:"🇸🇬",tz:"Asia/Singapore",     lat:1.3,   lon:103.8},
+  {id:"bangkok",    name:"曼谷",    region:"泰国",     area:"东南亚",flag:"🇹🇭",tz:"Asia/Bangkok",       lat:13.8,  lon:100.5},
+  {id:"jakarta",    name:"雅加达",  region:"印度尼西亚",area:"东南亚",flag:"🇮🇩",tz:"Asia/Jakarta",      lat:-6.2,  lon:106.8},
+  {id:"manila",     name:"马尼拉",  region:"菲律宾",   area:"东南亚",flag:"🇵🇭",tz:"Asia/Manila",        lat:14.6,  lon:121.0},
+  {id:"hanoi",      name:"河内",    region:"越南",     area:"东南亚",flag:"🇻🇳",tz:"Asia/Ho_Chi_Minh",   lat:21.0,  lon:105.8},
+  {id:"kualalumpur",name:"吉隆坡",  region:"马来西亚", area:"东南亚",flag:"🇲🇾",tz:"Asia/Kuala_Lumpur",  lat:3.1,   lon:101.7},
+  // 南亚
+  {id:"mumbai",     name:"孟买",    region:"印度",     area:"南亚", flag:"🇮🇳", tz:"Asia/Kolkata",       lat:19.1,  lon:72.9},
+  {id:"delhi",      name:"新德里",  region:"印度",     area:"南亚", flag:"🇮🇳", tz:"Asia/Kolkata",       lat:28.6,  lon:77.2},
+  {id:"karachi",    name:"卡拉奇",  region:"巴基斯坦", area:"南亚", flag:"🇵🇰", tz:"Asia/Karachi",       lat:24.9,  lon:67.0},
+  {id:"dhaka",      name:"达卡",    region:"孟加拉国", area:"南亚", flag:"🇧🇩", tz:"Asia/Dhaka",         lat:23.8,  lon:90.4},
+  {id:"colombo",    name:"科伦坡",  region:"斯里兰卡", area:"南亚", flag:"🇱🇰", tz:"Asia/Colombo",       lat:6.9,   lon:79.9},
+  // 中东
+  {id:"dubai",      name:"迪拜",    region:"阿联酋",   area:"中东", flag:"🇦🇪", tz:"Asia/Dubai",         lat:25.2,  lon:55.3},
+  {id:"riyadh",     name:"利雅得",  region:"沙特阿拉伯",area:"中东",flag:"🇸🇦", tz:"Asia/Riyadh",        lat:24.7,  lon:46.7},
+  {id:"tehran",     name:"德黑兰",  region:"伊朗",     area:"中东", flag:"🇮🇷", tz:"Asia/Tehran",        lat:35.7,  lon:51.4},
+  {id:"istanbul",   name:"伊斯坦布尔",region:"土耳其", area:"中东", flag:"🇹🇷", tz:"Europe/Istanbul",    lat:41.0,  lon:29.0},
+  {id:"tel_aviv",   name:"特拉维夫",region:"以色列",   area:"中东", flag:"🇮🇱", tz:"Asia/Jerusalem",     lat:32.1,  lon:34.8},
+  // 欧洲
+  {id:"london",     name:"伦敦",    region:"英国",     area:"欧洲", flag:"🇬🇧", tz:"Europe/London",      lat:51.5,  lon:-0.1},
+  {id:"paris",      name:"巴黎",    region:"法国",     area:"欧洲", flag:"🇫🇷", tz:"Europe/Paris",       lat:48.9,  lon:2.3},
+  {id:"berlin",     name:"柏林",    region:"德国",     area:"欧洲", flag:"🇩🇪", tz:"Europe/Berlin",      lat:52.5,  lon:13.4},
+  {id:"madrid",     name:"马德里",  region:"西班牙",   area:"欧洲", flag:"🇪🇸", tz:"Europe/Madrid",      lat:40.4,  lon:-3.7},
+  {id:"rome",       name:"罗马",    region:"意大利",   area:"欧洲", flag:"🇮🇹", tz:"Europe/Rome",        lat:41.9,  lon:12.5},
+  {id:"amsterdam",  name:"阿姆斯特丹",region:"荷兰",   area:"欧洲", flag:"🇳🇱", tz:"Europe/Amsterdam",   lat:52.4,  lon:4.9},
+  {id:"moscow",     name:"莫斯科",  region:"俄罗斯",   area:"欧洲", flag:"🇷🇺", tz:"Europe/Moscow",      lat:55.7,  lon:37.6},
+  {id:"stockholm",  name:"斯德哥尔摩",region:"瑞典",   area:"欧洲", flag:"🇸🇪", tz:"Europe/Stockholm",   lat:59.3,  lon:18.1},
+  {id:"zurich",     name:"苏黎世",  region:"瑞士",     area:"欧洲", flag:"🇨🇭", tz:"Europe/Zurich",      lat:47.4,  lon:8.5},
+  {id:"warsaw",     name:"华沙",    region:"波兰",     area:"欧洲", flag:"🇵🇱", tz:"Europe/Warsaw",      lat:52.2,  lon:21.0},
+  // 非洲
+  {id:"cairo",      name:"开罗",    region:"埃及",     area:"非洲", flag:"🇪🇬", tz:"Africa/Cairo",       lat:30.0,  lon:31.2},
+  {id:"lagos",      name:"拉各斯",  region:"尼日利亚", area:"非洲", flag:"🇳🇬", tz:"Africa/Lagos",       lat:6.5,   lon:3.4},
+  {id:"nairobi",    name:"内罗毕",  region:"肯尼亚",   area:"非洲", flag:"🇰🇪", tz:"Africa/Nairobi",     lat:-1.3,  lon:36.8},
+  {id:"johannesburg",name:"约翰内斯堡",region:"南非",  area:"非洲", flag:"🇿🇦", tz:"Africa/Johannesburg",lat:-26.2, lon:28.0},
+  {id:"casablanca", name:"卡萨布兰卡",region:"摩洛哥", area:"非洲", flag:"🇲🇦", tz:"Africa/Casablanca",  lat:33.6,  lon:-7.6},
+  // 北美
+  {id:"newyork",    name:"纽约",    region:"美国",     area:"北美", flag:"🇺🇸", tz:"America/New_York",   lat:40.7,  lon:-74.0},
+  {id:"la",         name:"洛杉矶",  region:"美国",     area:"北美", flag:"🇺🇸", tz:"America/Los_Angeles",lat:34.1,  lon:-118.2},
+  {id:"chicago",    name:"芝加哥",  region:"美国",     area:"北美", flag:"🇺🇸", tz:"America/Chicago",    lat:41.9,  lon:-87.6},
+  {id:"miami",      name:"迈阿密",  region:"美国",     area:"北美", flag:"🇺🇸", tz:"America/New_York",   lat:25.8,  lon:-80.2},
+  {id:"houston",    name:"休斯顿",  region:"美国",     area:"北美", flag:"🇺🇸", tz:"America/Chicago",    lat:29.8,  lon:-95.4},
+  {id:"toronto",    name:"多伦多",  region:"加拿大",   area:"北美", flag:"🇨🇦", tz:"America/Toronto",    lat:43.7,  lon:-79.4},
+  {id:"vancouver",  name:"温哥华",  region:"加拿大",   area:"北美", flag:"🇨🇦", tz:"America/Vancouver",  lat:49.2,  lon:-123.1},
+  {id:"mexico",     name:"墨西哥城",region:"墨西哥",   area:"北美", flag:"🇲🇽", tz:"America/Mexico_City",lat:19.4,  lon:-99.1},
+  // 中美洲 & 加勒比
+  {id:"panama",     name:"巴拿马城",region:"巴拿马",   area:"中美洲",flag:"🇵🇦", tz:"America/Panama",     lat:8.99,  lon:-79.5},
+  {id:"sanjose_cr", name:"圣何塞",  region:"哥斯达黎加",area:"中美洲",flag:"🇨🇷",tz:"America/Costa_Rica", lat:9.93,  lon:-84.1},
+  {id:"guatemala",  name:"危地马拉城",region:"危地马拉",area:"中美洲",flag:"🇬🇹",tz:"America/Guatemala",  lat:14.6,  lon:-90.5},
+  {id:"tegucigalpa",name:"特古西加尔巴",region:"洪都拉斯",area:"中美洲",flag:"🇭🇳",tz:"America/Tegucigalpa",lat:14.1,lon:-87.2},
+  {id:"managua",    name:"马那瓜",  region:"尼加拉瓜", area:"中美洲",flag:"🇳🇮", tz:"America/Managua",    lat:12.1,  lon:-86.3},
+  {id:"sansalvador",name:"圣萨尔瓦多",region:"萨尔瓦多",area:"中美洲",flag:"🇸🇻",tz:"America/El_Salvador",lat:13.7, lon:-89.2},
+  {id:"havana",     name:"哈瓦那",  region:"古巴",     area:"中美洲",flag:"🇨🇺", tz:"America/Havana",     lat:23.1,  lon:-82.4},
+  {id:"kingston",   name:"金斯敦",  region:"牙买加",   area:"中美洲",flag:"🇯🇲", tz:"America/Jamaica",    lat:18.0,  lon:-76.8},
+  {id:"santo_domingo",name:"圣多明各",region:"多米尼加共和国",area:"中美洲",flag:"🇩🇴",tz:"America/Santo_Domingo",lat:18.5,lon:-69.9},
+  {id:"port_au_prince",name:"太子港",region:"海地",   area:"中美洲",flag:"🇭🇹", tz:"America/Port-au-Prince",lat:18.5,lon:-72.3},
+  {id:"nassau",     name:"拿骚",    region:"巴哈马",   area:"中美洲",flag:"🇧🇸", tz:"America/Nassau",     lat:25.1,  lon:-77.4},
+  // 南美
+  {id:"saopaulo",   name:"圣保罗",  region:"巴西",     area:"南美", flag:"🇧🇷", tz:"America/Sao_Paulo",  lat:-23.5, lon:-46.6},
+  {id:"buenosaires",name:"布宜诺斯艾利斯",region:"阿根廷",area:"南美",flag:"🇦🇷",tz:"America/Argentina/Buenos_Aires",lat:-34.6,lon:-58.4},
+  {id:"lima",       name:"利马",    region:"秘鲁",     area:"南美", flag:"🇵🇪", tz:"America/Lima",       lat:-12.0, lon:-77.1},
+  {id:"bogota",     name:"波哥大",  region:"哥伦比亚", area:"南美", flag:"🇨🇴", tz:"America/Bogota",     lat:4.7,   lon:-74.1},
+  // 大洋洲
+  {id:"sydney",     name:"悉尼",    region:"澳大利亚", area:"大洋洲",flag:"🇦🇺",tz:"Australia/Sydney",   lat:-33.9, lon:151.2},
+  {id:"melbourne",  name:"墨尔本",  region:"澳大利亚", area:"大洋洲",flag:"🇦🇺",tz:"Australia/Melbourne",lat:-37.8, lon:145.0},
+  {id:"auckland",   name:"奥克兰",  region:"新西兰",   area:"大洋洲",flag:"🇳🇿",tz:"Pacific/Auckland",   lat:-36.9, lon:174.8},
+];
+
+const AREAS = ["全部","东亚","东南亚","南亚","中东","欧洲","非洲","北美","中美洲","南美","大洋洲"];
+const WMO_MAP = {
+  0:{icon:"☀️",desc:"晴"},1:{icon:"🌤️",desc:"多云转晴"},2:{icon:"⛅",desc:"多云"},3:{icon:"☁️",desc:"阴"},
+  45:{icon:"🌫️",desc:"雾"},48:{icon:"🌫️",desc:"雾凇"},51:{icon:"🌦️",desc:"毛毛雨"},
+  61:{icon:"🌧️",desc:"小雨"},63:{icon:"🌧️",desc:"中雨"},65:{icon:"🌧️",desc:"大雨"},
+  71:{icon:"🌨️",desc:"小雪"},73:{icon:"❄️",desc:"中雪"},75:{icon:"❄️",desc:"大雪"},
+  80:{icon:"🌦️",desc:"阵雨"},95:{icon:"⛈️",desc:"雷雨"},99:{icon:"⛈️",desc:"强雷雨"},
+};
+const ARC_COLORS = ["#4f8ef7","#7c6af5","#22c55e","#38bdf8","#f97316","#eab308"];
+
+const DAY_CN  = ["周日","周一","周二","周三","周四","周五","周六"];
+const MON_CN  = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+
+// ── state ──────────────────────────────────────────────────────────────
+let activeCityIds = ["beijing","tokyo","newyork","london","dubai","sydney"];
+let weatherCache  = {};
+let currentArea   = "全部";
+let searchQuery   = "";
+
+// ── utils ───────────────────────────────────────────────────────────────
+function getWMO(code) {
+  return WMO_MAP[code] || WMO_MAP[Math.floor(code/10)*10] || {icon:"🌡️",desc:"未知"};
+}
+function getTempBadge(temp) {
+  if (temp >= 35) return {cls:"hot",  label:"酷热"};
+  if (temp >= 28) return {cls:"humid",label:"闷热"};
+  if (temp >= 22) return {cls:"warm", label:"温暖"};
+  if (temp >= 14) return {cls:"nice", label:"舒适"};
+  return                 {cls:"cool", label:"凉爽"};
+}
+function getLocalTime(tz) {
+  const now = new Date();
+  const f = (t,o) => new Intl.DateTimeFormat("en-US",{...o,timeZone:tz}).format(now);
+  const h = f("h",{hour:"2-digit",hour12:false});
+  const m = f("m",{minute:"2-digit"});
+  const s = f("s",{second:"2-digit"});
+  const d = new Date(now.toLocaleString("en-US",{timeZone:tz}));
+  return {h,m,s,date:`${DAY_CN[d.getDay()]} · ${MON_CN[d.getMonth()]}${d.getDate()}日`};
+}
+
+// ── weather ─────────────────────────────────────────────────────────────
+async function fetchWeather(city) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m&timezone=auto&forecast_days=1`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error("HTTP "+r.status);
+    const d = await r.json();
+    const c = d.current;
+    const wmo  = getWMO(c.weathercode);
+    const temp = Math.round(c.temperature_2m);
+    weatherCache[city.id] = {
+      temp, icon:wmo.icon, desc:wmo.desc,
+      wind:Math.round(c.windspeed_10m),
+      humidity:Math.round(c.relativehumidity_2m),
+      badge:getTempBadge(temp), ts:Date.now()
+    };
+  } catch(e) {
+    if (!weatherCache[city.id])
+      weatherCache[city.id] = {temp:"—",icon:"❓",desc:"无数据",wind:"—",humidity:"—",badge:{cls:"cool",label:"—"},ts:0};
+  }
+}
+
+async function loadWeatherForActive() {
+  const cities = activeCityIds.map(id => ALL_CITIES.find(c=>c.id===id)).filter(Boolean);
+  document.getElementById("weatherStatus").textContent = "天气更新中…";
+  await Promise.all(cities.map(fetchWeather));
+  renderCards();
+  const t = new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+  document.getElementById("weatherStatus").textContent = `上次更新 ${t}`;
+}
+
+// ── render cards ─────────────────────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById("grid");
+  // keep empty state div
+  const es = document.getElementById("emptyState");
+  grid.innerHTML = "";
+  grid.appendChild(es);
+
+  if (activeCityIds.length === 0) {
+    es.style.display = "block"; return;
+  }
+  es.style.display = "none";
+
+  activeCityIds.forEach(id => {
+    const city = ALL_CITIES.find(c=>c.id===id);
+    if (!city) return;
+    const w = weatherCache[id] || {};
+    const t = getLocalTime(city.tz);
+    const badge = w.badge || {cls:"cool",label:"—"};
+
+    const card = document.createElement("article");
+    card.className = "card";
+    card.id = "card-"+id;
+    card.setAttribute("aria-label",`${city.name} 当前时间 ${t.h}:${t.m}`);
+    card.innerHTML = `
+      <button class="card-remove" onclick="removeCity('${id}')" aria-label="移除 ${city.name}">✕</button>
+      <div class="card-top">
+        <div class="card-flag" aria-hidden="true">${city.flag}</div>
+        <div class="card-info">
+          <div class="card-name">${city.name}</div>
+          <div class="card-region">${city.region}</div>
+        </div>
+        <div class="card-badge badge-${badge.cls}">${badge.label}</div>
+      </div>
+      <div class="card-time" id="t-${id}">${t.h}:${t.m}<span class="card-seconds">:${t.s}</span></div>
+      <div class="card-date" id="d-${id}">${t.date}</div>
+      <hr class="card-divider">
+      <div class="card-weather">
+        <div class="weather-emoji" aria-hidden="true">${w.icon||"…"}</div>
+        <div class="weather-right">
+          <div class="weather-temp">${w.temp!==undefined?w.temp+"°C":"—"}</div>
+          <div class="weather-desc">${w.desc||"加载中…"}</div>
+        </div>
+        <div class="weather-extra">
+          <div>💨 ${w.wind!==undefined?w.wind+" km/h":"—"}</div>
+          <div>💧 ${w.humidity!==undefined?w.humidity+"%":"—"}</div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function tickClocks() {
+  activeCityIds.forEach(id => {
+    const city = ALL_CITIES.find(c=>c.id===id);
+    if(!city) return;
+    const te = document.getElementById("t-"+id);
+    const de = document.getElementById("d-"+id);
+    if(!te) return;
+    const t = getLocalTime(city.tz);
+    te.innerHTML = `${t.h}:${t.m}<span class="card-seconds">:${t.s}</span>`;
+    de.textContent = t.date;
+  });
+  const now = new Date();
+  document.getElementById("localTime").textContent =
+    now.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+
+// ── remove city ──────────────────────────────────────────────────────────
+function removeCity(id) {
+  activeCityIds = activeCityIds.filter(x=>x!==id);
+  renderCards();
+  updateModalStates();
+}
+
+// ── tz arc ───────────────────────────────────────────────────────────────
+function buildArc() {
+  const arc = document.getElementById("tzArc");
+  for (let i=0;i<24;i++) {
+    const bar = document.createElement("div");
+    bar.className="tz-bar"; bar.id="tz-"+i;
+    bar.style.background = ARC_COLORS[i%ARC_COLORS.length];
+    arc.appendChild(bar);
+  }
+}
+function updateArc() {
+  const utcH = new Date().getUTCHours();
+  for (let i=0;i<24;i++) {
+    const bar = document.getElementById("tz-"+i);
+    if(!bar) continue;
+    const diff=Math.abs(i-utcH), dist=Math.min(diff,24-diff);
+    bar.style.height=Math.max(7,32-dist*2.5)+"px";
+    bar.classList.toggle("active",dist<=1);
+  }
+}
+
+// ── modal ────────────────────────────────────────────────────────────────
+function buildRegionTabs() {
+  const wrap = document.getElementById("regionTabs");
+  AREAS.forEach(area => {
+    const btn = document.createElement("button");
+    btn.className = "region-tab" + (area===currentArea?" active":"");
+    btn.textContent = area;
+    btn.onclick = () => {
+      currentArea = area;
+      document.querySelectorAll(".region-tab").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCityList();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderCityList() {
+  const list = document.getElementById("cityList");
+  const noRes = document.getElementById("noResults");
+  // clear except noResults
+  Array.from(list.children).forEach(c=>{ if(c.id!=="noResults") c.remove(); });
+
+  const q = searchQuery.toLowerCase();
+  const filtered = ALL_CITIES.filter(c => {
+    const areaOk = currentArea==="全部" || c.area===currentArea;
+    const searchOk = !q || c.name.includes(q) || c.region.includes(q) || c.area.includes(q);
+    return areaOk && searchOk;
+  });
+
+  noRes.style.display = filtered.length===0?"block":"none";
+
+  filtered.forEach(city => {
+    const added = activeCityIds.includes(city.id);
+    const el = document.createElement("div");
+    el.className = "city-option"+(added?" added":"");
+    el.id = "opt-"+city.id;
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    el.setAttribute("aria-pressed", added?"true":"false");
+    el.innerHTML = `
+      <div class="opt-flag" aria-hidden="true">${city.flag}</div>
+      <div class="opt-info">
+        <div class="opt-name">${city.name}</div>
+        <div class="opt-region">${city.region}</div>
+      </div>
+      <div class="opt-check" aria-hidden="true">✓</div>
+      <div class="opt-add" aria-hidden="true">+</div>`;
+    el.onclick = () => toggleCity(city.id);
+    el.onkeydown = e => { if(e.key==="Enter"||e.key===" ") toggleCity(city.id); };
+    list.appendChild(el);
+  });
+}
+
+function toggleCity(id) {
+  if (activeCityIds.includes(id)) {
+    activeCityIds = activeCityIds.filter(x=>x!==id);
+  } else {
+    activeCityIds.push(id);
+    const city = ALL_CITIES.find(c=>c.id===id);
+    if (city && !weatherCache[id]) {
+      fetchWeather(city).then(renderCards);
+    }
+  }
+  renderCards();
+  updateModalStates();
+}
+
+function updateModalStates() {
+  ALL_CITIES.forEach(city => {
+    const el = document.getElementById("opt-"+city.id);
+    if(!el) return;
+    const added = activeCityIds.includes(city.id);
+    el.classList.toggle("added", added);
+    el.setAttribute("aria-pressed", added?"true":"false");
+  });
+}
+
+function filterCities() {
+  searchQuery = document.getElementById("citySearch").value;
+  renderCityList();
+}
+
+function openModal() {
+  document.getElementById("modalOverlay").classList.add("open");
+  document.getElementById("citySearch").focus();
+  renderCityList();
+}
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+}
+document.getElementById("modalOverlay").addEventListener("click",e=>{
+  if(e.target===e.currentTarget) closeModal();
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
+
+// ── init ─────────────────────────────────────────────────────────────────
+buildArc();
+buildRegionTabs();
+renderCards();
+loadWeatherForActive();
+
+setInterval(tickClocks, 1000);
+setInterval(updateArc, 30000);
+setInterval(loadWeatherForActive, 10*60*1000);
+
+tickClocks();
+updateArc();
+</script>
+</body>
+</html>
