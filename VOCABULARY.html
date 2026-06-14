@@ -1,0 +1,1703 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>单词日积月累</title>
+  <style>
+    :root{--paper:#f7f0e3;--paper2:#eadcc5;--ink:#20231d;--muted:#716b5f;--line:rgba(32,35,29,.16);--green:#315443;--green2:#20382e;--clay:#b65d3a;--gold:#d5a248;--blue:#496b85;--white:#fffaf0;--shadow:0 24px 70px rgba(43,35,22,.18);--r:24px}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;color:var(--ink);font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Noto Sans SC",sans-serif;background:radial-gradient(circle at 18% -8%,rgba(213,162,72,.38),transparent 30%),radial-gradient(circle at 100% 8%,rgba(49,84,67,.24),transparent 34%),linear-gradient(135deg,var(--paper),#fff9ed 56%,var(--paper2))} body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.33;background-image:linear-gradient(rgba(32,35,29,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(32,35,29,.035) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,#000,transparent 84%)}
+    button,input,select,textarea{font:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:34px 0 48px}.hero{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:18px}.card,.panel,.study,.quiz{background:rgba(255,250,239,.8);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(16px)}.card{padding:26px 30px 22px;position:relative;overflow:hidden;min-height:unset}.card:after{content:"VOCABULARY";position:absolute;right:-18px;bottom:-10px;font-size:clamp(44px,8vw,96px);font-weight:900;letter-spacing:-.08em;color:rgba(49,84,67,.08);line-height:1;pointer-events:none;z-index:0}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}.eyebrow:before{content:"";width:34px;height:2px;background:var(--clay)}h1{margin:0;font-size:clamp(36px,4.8vw,64px);line-height:1.02;letter-spacing:-.045em;font-weight:900;position:relative;z-index:1;white-space:nowrap;font-family:"Microsoft YaHei","微软雅黑","PingFang SC","Noto Sans SC",sans-serif;text-shadow:0 1px 0 rgba(255,255,255,.55)}.sub{max-width:650px;margin:20px 0 0;color:var(--muted);font-size:16px;line-height:1.8}.title-row{position:relative;z-index:1;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px;justify-content:start}.title-row:before{content:"";position:absolute;left:calc(min(100%, 420px));top:50%;width:1px;height:42px;background:rgba(32,35,29,.12);transform:translateY(-50%);display:none}.stats{display:grid;grid-template-columns:repeat(4,68px) 118px;gap:6px;margin-top:0;max-width:none;align-items:stretch;justify-self:start}.stat{min-height:48px;padding:7px 9px;border-radius:14px;background:rgba(49,84,67,.94);color:#fff7e8;overflow:hidden;border:1px solid rgba(255,255,255,.18);display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 18px rgba(42,34,20,.08)}.stat:nth-child(2){background:rgba(182,93,58,.94)}.stat:nth-child(3){background:rgba(73,107,133,.94)}.stat:nth-child(4){background:rgba(32,35,29,.92)}.stat b{display:block;font-size:19px;letter-spacing:-.04em;line-height:1;margin-bottom:3px}.stat span{opacity:.86;font-size:10.5px;white-space:nowrap}
+    .quote-box{position:relative;z-index:1;margin-top:12px;display:inline-flex;align-items:baseline;gap:10px;max-width:760px;padding:9px 13px;border-radius:15px;background:rgba(255,255,255,.42);border:1px solid rgba(32,35,29,.1);color:var(--green);animation:fadeInUp .42s ease both}.quote-box span{font-weight:800;line-height:1.45}.quote-box small{color:var(--muted);white-space:nowrap}.quote-fade{animation:quoteFade .55s ease both}@keyframes quoteFade{0%{opacity:0;transform:translateY(5px)}100%{opacity:1;transform:translateY(0)}}.mini-search{min-height:48px;padding:0 9px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.82);display:flex;align-items:center;gap:5px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;position:relative;z-index:5;pointer-events:auto;box-shadow:0 8px 18px rgba(42,34,20,.06)}.mini-search:hover,.mini-search:focus-within{transform:translateY(-2px);border-color:rgba(49,84,67,.36);box-shadow:0 10px 24px rgba(42,34,20,.09)}.mini-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-size:12.5px;position:relative;z-index:6;pointer-events:auto}.mini-search input::placeholder{color:rgba(113,107,95,.72)}
+.toolbar{display:grid;grid-template-columns:1fr;gap:14px;padding:16px;margin-bottom:22px;align-items:center}.field{display:flex;align-items:center;gap:10px;min-height:50px;padding:0 14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.52);white-space:nowrap}.field input,.field select{width:100%;border:0;outline:0;background:transparent;color:var(--ink)}
+    .toolbar{animation:fadeInUp .5s ease both}.field{position:relative;overflow:hidden;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}.field:focus-within,.field:hover{transform:translateY(-2px);border-color:rgba(49,84,67,.42);box-shadow:0 14px 30px rgba(42,34,20,.1);background:rgba(255,255,255,.68)}.filter-label{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:28px;padding:0 10px;border-radius:999px;background:rgba(49,84,67,.1);color:var(--green);font-size:13px;font-weight:700}.filter-icon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;background:rgba(213,162,72,.18)}.select-field:after{content:"⌄";position:absolute;right:14px;top:50%;transform:translateY(-54%);color:var(--green);font-weight:800;pointer-events:none;transition:transform .22s ease}.select-field:focus-within:after{transform:translateY(-45%) rotate(180deg)}.field select{appearance:none;-webkit-appearance:none;padding-right:28px;font-weight:700}.field input::placeholder{color:rgba(113,107,95,.72)}.filter-pulse{animation:filterPulse .34s ease both}@keyframes filterPulse{0%{opacity:.65;transform:scale(.985)}100%{opacity:1;transform:scale(1)}}
+    .filter-board{position:relative}.search-only{max-width:760px;padding:12px;margin-bottom:18px}.search-only .field{min-height:54px}.chip-group{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start;padding:10px 12px;border:1px solid rgba(32,35,29,.08);border-radius:18px;background:rgba(255,255,255,.26);animation:fadeInUp .45s ease both}.chip-title{height:34px;display:flex;align-items:center;justify-content:flex-end;color:var(--green);font-size:13px;font-weight:800;letter-spacing:.08em}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.56);color:var(--ink);padding:8px 13px;cursor:pointer;transition:opacity .2s ease,transform .2s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}.chip:hover{transform:translateY(-2px);border-color:rgba(49,84,67,.36);box-shadow:0 10px 22px rgba(42,34,20,.09)}.chip.active{background:var(--green);border-color:var(--green);color:#fff7e8;box-shadow:0 10px 24px rgba(49,84,67,.2)}.chip-switch{animation:chipSwitch .28s ease both}@keyframes chipSwitch{0%{opacity:.45;transform:translateY(5px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+.main{display:grid;grid-template-columns:320px 1fr;gap:22px;align-items:start}.side{padding:18px;position:sticky;top:18px}.side h2,.study h2,.quiz h2{margin:0 0 14px;font-size:18px;letter-spacing:-.02em}.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}.cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}.btn,.cat,.choice{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.46);color:var(--ink);cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}.btn:hover,.cat:hover,.choice:hover{transform:translateY(-1px);border-color:rgba(49,84,67,.36);box-shadow:0 10px 24px rgba(42,34,20,.09)}.btn{padding:10px 13px}.btn.primary{background:var(--ink);color:#fff7e8;border-color:var(--ink)}.mode.active,.cat.active{background:var(--green);color:#fff7e8;border-color:var(--green)}.cat{text-align:left;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}.data{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:14px;line-height:1.65}.data textarea{width:100%;min-height:102px;resize:vertical;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.42);padding:12px;outline:0;color:var(--ink);margin:10px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.study,.quiz{padding:28px;text-align:left}.top{display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:20px;align-items:start;margin-bottom:20px}.word{margin:0;font-size:clamp(40px,7vw,76px);line-height:1.06;letter-spacing:-.035em;overflow-wrap:anywhere;font-weight:800}.phon{color:var(--clay);font-weight:700;margin-top:8px;font-size:18px}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.46);color:var(--muted);font-size:13px}.master{min-width:132px;text-align:center;border-radius:18px;padding:14px;color:#fff7e8;background:var(--green)}.master b{display:block;font-size:26px;line-height:1}.master span{font-size:12px;opacity:.82}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}.meaning{border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.42);padding:18px;min-height:126px}.meaning label{display:block;color:var(--muted);font-size:13px;margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase}.meaning div{font-size:18px;line-height:1.65;text-align:left}.example{border-left:5px solid var(--gold);background:rgba(213,162,72,.12);padding:18px 18px 18px 22px;border-radius:0 18px 18px 0;margin:18px 0}.example p{margin:0;font-size:19px;line-height:1.7;text-align:left}.example small{display:block;margin-top:10px;color:var(--muted);font-size:15px;line-height:1.55}.note{color:var(--muted);line-height:1.65;background:rgba(73,107,133,.1);border:1px solid rgba(73,107,133,.18);border-radius:18px;padding:14px 16px}.nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:22px}.bar{height:10px;background:rgba(32,35,29,.1);border-radius:999px;overflow:hidden;margin:16px 0 8px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:inherit;transition:width .35s ease}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.choice{text-align:left;padding:16px;min-height:76px;line-height:1.45}.choice.correct{background:rgba(49,84,67,.16);border-color:var(--green)}.choice.wrong{background:rgba(182,93,58,.18);border-color:var(--clay)}.cloze{width:100%;min-height:58px;border-radius:16px;border:1px solid var(--line);padding:0 16px;background:rgba(255,255,255,.52);outline:0;font-size:24px}.empty{padding:34px;text-align:center;color:var(--muted)}mark{background:rgba(213,162,72,.35);padding:0 .14em;border-radius:5px}
+    .fade-in{animation:fadeInUp .42s ease both}.word-pop{animation:wordPop .36s cubic-bezier(.2,.8,.2,1) both}@keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}@keyframes wordPop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}.speak{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff7e8;border-color:var(--green);margin-top:12px}.speak:hover{background:var(--green2)}.example-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.speak-example{padding:7px 11px;font-size:13px;background:rgba(73,107,133,.12);color:var(--blue);border-color:rgba(73,107,133,.22)}.speak-example:hover{background:var(--blue);color:#fff7e8;border-color:var(--blue)}.phrase-box{margin:18px 0;padding:16px;border:1px solid rgba(49,84,67,.18);background:rgba(49,84,67,.08);border-radius:18px}.phrase-box label{display:block;color:var(--muted);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}.phrases{display:flex;flex-wrap:wrap;gap:8px}.phrase{padding:9px 12px;border-radius:16px;background:rgba(255,255,255,.66);border:1px solid var(--line);font-size:14px;display:inline-flex;flex-direction:column;gap:3px;align-items:flex-start}.phrase-en{font-weight:800;color:var(--ink)}.phrase-zh{font-size:12px;color:var(--muted);line-height:1.35}.flash{animation:flash .55s ease}@keyframes flash{0%{box-shadow:0 0 0 0 rgba(213,162,72,.0)}35%{box-shadow:0 0 0 6px rgba(213,162,72,.24)}100%{box-shadow:0 0 0 0 rgba(213,162,72,0)}}
+@media(max-width:900px){.hero,.main,.toolbar{grid-template-columns:1fr}.side{position:static}.title-row{display:flex;align-items:flex-start;flex-direction:column;gap:12px}.grid2,.choices{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr);width:100%}.mini-search{grid-column:1/-1}.top{grid-template-columns:1fr}.master{width:100%}h1{white-space:normal}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero compact-hero"><div class="card"><div class="eyebrow">daily vocabulary atlas</div><div class="title-row"><h1>单词日积月累</h1><div class="stats compact-stats"><div class="stat"><b id="statTotal">0</b><span>完整词条</span></div><div class="stat"><b id="statKnown">0</b><span>已掌握</span></div><div class="stat"><b id="statFav">0</b><span>已收藏</span></div><div class="stat"><b id="statRate">0%</b><span>掌握率</span></div><label class="mini-search"><span>🔎</span><input id="searchInput" type="search" placeholder="搜索"></label></div></div><div class="quote-box" aria-live="polite"><span id="quoteText">Learning never exhausts the mind.</span><small id="quoteAuthor">— Leonardo da Vinci</small></div></div></section>
+    
+    <section class="main"><aside class="side panel"><h2>学习模式</h2><div class="mode-grid"><button class="btn mode active" data-mode="card">词卡</button><button class="btn mode" data-mode="quiz">选择题</button><button class="btn mode" data-mode="cloze">例句填空</button><button class="btn mode" data-mode="list">清单</button></div><h2>分类</h2><div id="categoryList" class="cat-list"></div><div class="data"><strong>导入真实词库</strong><br>粘贴 JSON 数组后点“导入”。支持字段：id, term, phonetic, meaning, definition/meaningEn/englishExplanation, category, difficulty(easy/medium/hard), status(new/learning/mastered), examples, sourceUrl, note。<textarea id="importText" placeholder='[{"id":58,"term":"unveil","phonetic":"/ˌʌnˈveɪl/","meaning":"推出；公布；揭幕；揭露","definition":"To reveal, announce, or show something publicly for the first time.","meaningEn":"To reveal, announce, or show something publicly for the first time.","category":"通用英文词汇","difficulty":"medium","status":"new","examples":[{"en":"The company will unveil its new product next week.","zh":"公司将在下周发布新产品。"}],"sourceUrl":"https://www.feishu.cn/wiki/xxx","note":"可用于产品发布、正式公布等场景。"}]'></textarea><div class="row"><button class="btn primary" id="importBtn">导入 JSON</button><button class="btn" id="exportBtn">导出词库</button><button class="btn" id="resetBtn">重置进度</button></div></div></aside><section id="stage"></section></section>
+  </main>
+<script>
+const STORAGE_WORDS='vocab-mini.words.v16';
+const STORAGE_PROGRESS='vocab-mini.progress.v1';
+const starterWords=[
+  {
+    "id": "001",
+    "term": "Hallucination",
+    "word": "Hallucination",
+    "meaning": "幻觉；AI 生成不真实内容",
+    "zh": "幻觉；AI 生成不真实内容",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/Fh3NwsaNNisyTvkE5lVcfixSnBd",
+    "note": "通用义为幻觉；AI 领域特指模型编造事实或无中生有。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "002",
+    "term": "Fine-tuning",
+    "word": "Fine-tuning",
+    "meaning": "微调；对模型进行定向训练",
+    "zh": "微调；对模型进行定向训练",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/CkPqwBk1hioJXrk22MTc1FuGnCd",
+    "note": "常用于让基础大模型适配特定任务或业务场景。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "003",
+    "term": "RAG / Retrieval Augmented Generation",
+    "word": "RAG / Retrieval Augmented Generation",
+    "meaning": "检索增强生成",
+    "zh": "检索增强生成",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/PJzfwR9WAikQ5NkB7TZcnnlynBc",
+    "note": "RAG 的完整英文是 Retrieval Augmented Generation。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "004",
+    "term": "Sequential Thinking",
+    "word": "Sequential Thinking",
+    "meaning": "顺序思考 / 逐步推理",
+    "zh": "顺序思考 / 逐步推理",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/GjFEwjlz3iiGSWkH4UncQckRnfd",
+    "note": "强调按步骤拆解问题并逐步推导。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "005",
+    "term": "τ scaling law",
+    "word": "τ scaling law",
+    "meaning": "τ 缩放定律",
+    "zh": "τ 缩放定律",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/XnWPwa6jKiCsFck3xoEcjvFUn5b",
+    "note": "科技论文/模型规律相关表达。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "006",
+    "term": "Quantum Tunneling Effect",
+    "word": "Quantum Tunneling Effect",
+    "meaning": "量子隧穿效应",
+    "zh": "量子隧穿效应",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/Chu7w8vY0iQsvbkNJTcctFjRnMg",
+    "note": "量子物理与半导体相关概念。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "007",
+    "term": "Conventional Design",
+    "word": "Conventional Design",
+    "meaning": "传统设计",
+    "zh": "传统设计",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/LoBHwoyXbiXwbtkcV9XcYwLKnNb",
+    "note": "常用于与新型架构或先进设计对比。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "008",
+    "term": "2D",
+    "word": "2D",
+    "meaning": "二维芯片设计",
+    "zh": "二维芯片设计",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/LoBHwoyXbiXwbtkcV9XcYwLKnNb",
+    "note": "芯片设计语境下指二维结构/二维设计。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "009",
+    "term": "Chiplet",
+    "word": "Chiplet",
+    "meaning": "芯粒 / 小芯片",
+    "zh": "芯粒 / 小芯片",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/LoBHwoyXbiXwbtkcV9XcYwLKnNb",
+    "note": "先进封装与芯片架构中的常见术语。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "010",
+    "term": "3D Stacking",
+    "word": "3D Stacking",
+    "meaning": "三维堆叠",
+    "zh": "三维堆叠",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/LoBHwoyXbiXwbtkcV9XcYwLKnNb",
+    "note": "半导体先进封装/芯片集成相关术语。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "011",
+    "term": "transistor",
+    "word": "transistor",
+    "meaning": "晶体管",
+    "zh": "晶体管",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/Kpy5wtB6wibmoPkmoQncbAhMnVd",
+    "note": "电子电路与半导体基础器件。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "012",
+    "term": "semiconductor",
+    "word": "semiconductor",
+    "meaning": "半导体",
+    "zh": "半导体",
+    "en": "",
+    "category": "AI / 科技术语",
+    "level": "进阶",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/L3PdwISoziRgPzkmf7LcxXiFnJe",
+    "note": "现代芯片和电子产业核心材料/领域。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW021",
+    "term": "unveil",
+    "word": "unveil",
+    "meaning": "推出；公布；揭幕；揭露",
+    "zh": "推出；公布；揭幕；揭露",
+    "en": "To reveal, announce, or show something publicly for the first time.",
+    "category": "通用英文词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/E63YwvmV2iiLp6kseR2cy09Nnye",
+    "note": "常用于产品发布、揭幕仪式、正式公布等场景。",
+    "example": "The company will unveil its new product next week.",
+    "exampleZh": "公司将在下周发布新产品。",
+    "englishExplanation": "To reveal, announce, or show something publicly for the first time.",
+    "englishMeaning": "Unveil means to make something known or visible for the first time.",
+    "meaningEn": "To reveal, announce, or show something publicly for the first time.",
+    "definition": "To reveal or publicly announce something for the first time.",
+    "phonetic": "/ˌʌnˈveɪl/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "The company will unveil its new product next week.",
+        "zh": "公司将在下周发布新产品。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "unveil example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "unveil usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "014",
+    "term": "Escalate",
+    "word": "Escalate",
+    "meaning": "升级；加剧；上报",
+    "zh": "升级；加剧；上报",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/JsBWwse3kiGDFxkt1DocjyxIn7g",
+    "note": "商务场景中常指问题升级/向上汇报。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "015",
+    "term": "commencement",
+    "word": "commencement",
+    "meaning": "开始；毕业典礼",
+    "zh": "开始；毕业典礼",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/XNKAwZqkiije9jkBbRcc2noPnhb",
+    "note": "正式表达中可指开端；美式英语常指毕业典礼。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "016",
+    "term": "well-trodden trope",
+    "word": "well-trodden trope",
+    "meaning": "老套桥段；常见套路",
+    "zh": "老套桥段；常见套路",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/MRXRwa3YIiRRvLk0ROqcCMDVnvb",
+    "note": "trope 指叙事套路/常见表达。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "017",
+    "term": "perspective",
+    "word": "perspective",
+    "meaning": "视角；观点；透视",
+    "zh": "视角；观点；透视",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/VNIJwRxJ6i9VP3k34uVcrLwJnSf",
+    "note": "常用于 from my perspective。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "018",
+    "term": "intentional",
+    "word": "intentional",
+    "meaning": "有意的；故意的",
+    "zh": "有意的；故意的",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/MyEpwIfVLidV4vkBmC3cNqVCniK",
+    "note": "强调有目的、有意识地做某事。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "019",
+    "term": "approach",
+    "word": "approach",
+    "meaning": "方法；接近；处理方式",
+    "zh": "方法；接近；处理方式",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/SgDUwPKKaiwLiFkwITqcqpqinbg",
+    "note": "名词常指方法；动词可指靠近/处理。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "020",
+    "term": "consecutive",
+    "word": "consecutive",
+    "meaning": "连续的；接连的",
+    "zh": "连续的；接连的",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/BEjuwOCn7iX7y8kUTjAcEq0QnCd",
+    "note": "常搭配 days, years, wins。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "021",
+    "term": "coma",
+    "word": "coma",
+    "meaning": "昏迷；彗发",
+    "zh": "昏迷；彗发",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/CdJzwAN6HidQHYkMo0bcDRbtnch",
+    "note": "医学语境常指昏迷。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "022",
+    "term": "paycheck",
+    "word": "paycheck",
+    "meaning": "工资支票；薪水",
+    "zh": "工资支票；薪水",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/QJZSwepOmiNFlmk4qdIcK02jnic",
+    "note": "美式英语中常泛指薪水收入。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "023",
+    "term": "omit",
+    "word": "omit",
+    "meaning": "省略；遗漏",
+    "zh": "省略；遗漏",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/Jsn7wEWLKiXVKJkMtLecWeuwngX",
+    "note": "写作和说明中常用。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW019",
+    "term": "claim",
+    "word": "claim",
+    "meaning": "声称；索赔；主张；要求获得",
+    "zh": "声称；索赔；主张；要求获得",
+    "en": "To say something is true, demand something as a right, or make a request for compensation.",
+    "category": "通用/法律词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/MJD5wqruZiTrysk5NcFcGsIonAh",
+    "note": "既可作动词，也可作名词。",
+    "example": "She claimed that the product was defective.",
+    "exampleZh": "她声称该产品有缺陷。",
+    "englishExplanation": "To say something is true, demand something as a right, or make a request for compensation.",
+    "englishMeaning": "Claim means to state, assert, demand, or request compensation.",
+    "meaningEn": "To say something is true, demand something as a right, or make a request for compensation.",
+    "definition": "To assert as true or demand as a right; a statement or demand.",
+    "phonetic": "/kleɪm/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "She claimed that the product was defective.",
+        "zh": "她声称该产品有缺陷。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "claim example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "claim usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW018",
+    "term": "sustain",
+    "word": "sustain",
+    "meaning": "维持；承受；支持；认可/维持异议",
+    "zh": "维持；承受；支持；认可/维持异议",
+    "en": "To keep something going, support it, suffer something, or uphold a legal objection.",
+    "category": "通用/法律词汇",
+    "level": "高级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/DtkHwbsfvi2If8kbBpMc7LChntc",
+    "note": "法律语境中 sustain an objection 表示“支持异议”。",
+    "example": "The judge sustained the objection.",
+    "exampleZh": "法官支持了该异议。",
+    "englishExplanation": "To keep something going, support it, suffer something, or uphold a legal objection.",
+    "englishMeaning": "Sustain can mean maintain, support, endure, or accept a legal objection.",
+    "meaningEn": "To keep something going, support it, suffer something, or uphold a legal objection.",
+    "definition": "To maintain, support, endure, or uphold.",
+    "phonetic": "/səˈsteɪn/",
+    "difficulty": "高级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "The judge sustained the objection.",
+        "zh": "法官支持了该异议。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "sustain example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "sustain usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "026",
+    "term": "identical",
+    "word": "identical",
+    "meaning": "完全相同的",
+    "zh": "完全相同的",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/KCYlwr8ZfiUdEQkWAV4c9jlPnvh",
+    "note": "强调一模一样。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW015",
+    "term": "professionalism",
+    "word": "professionalism",
+    "meaning": "专业精神；职业素养",
+    "zh": "专业精神；职业素养",
+    "en": "The skill, behavior, and attitude expected from a professional person.",
+    "category": "职场/通用词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/BI0PwuoWlifwgak5S3McFAmwn4c",
+    "note": "常用于职场、服务、管理和职业发展场景。",
+    "example": "Her professionalism impressed the entire team.",
+    "exampleZh": "她的专业素养给整个团队留下了深刻印象。",
+    "englishExplanation": "The skill, behavior, and attitude expected from a professional person.",
+    "englishMeaning": "Professionalism refers to professional conduct, competence, and responsibility.",
+    "meaningEn": "The skill, behavior, and attitude expected from a professional person.",
+    "definition": "The qualities and conduct expected of a professional.",
+    "phonetic": "/prəˈfeʃənəlɪzəm/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "Her professionalism impressed the entire team.",
+        "zh": "她的专业素养给整个团队留下了深刻印象。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "professionalism example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "professionalism usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW014",
+    "term": "crucial",
+    "word": "crucial",
+    "meaning": "至关重要的",
+    "zh": "至关重要的",
+    "en": "Extremely important or necessary for success.",
+    "category": "通用英文词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/XBFYw6kNXiwY0VkcEcvcQjMZnog",
+    "note": "语气强于 important。",
+    "example": "Good communication is crucial to teamwork.",
+    "exampleZh": "良好的沟通对团队合作至关重要。",
+    "englishExplanation": "Extremely important or necessary for success.",
+    "englishMeaning": "Crucial means very important and likely to affect the final result.",
+    "meaningEn": "Extremely important or necessary for success.",
+    "definition": "Decisive or critically important.",
+    "phonetic": "/ˈkruːʃl/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "Good communication is crucial to teamwork.",
+        "zh": "良好的沟通对团队合作至关重要。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "crucial example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "crucial usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "029",
+    "term": "anxiety",
+    "word": "anxiety",
+    "meaning": "焦虑；担忧",
+    "zh": "焦虑；担忧",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/RS7qwe8dnimjM7kSnJKcGY4qnch",
+    "note": "心理/日常场景常用。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "030",
+    "term": "reverse",
+    "word": "reverse",
+    "meaning": "反转；撤销；相反的",
+    "zh": "反转；撤销；相反的",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/FCNjwnFtUiidTdkrqxUc2Gxhnkf",
+    "note": "可作动词、名词、形容词。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW013",
+    "term": "vacuum",
+    "word": "vacuum",
+    "meaning": "真空；空白；吸尘器",
+    "zh": "真空；空白；吸尘器",
+    "en": "A space with little or no matter, or a device used for cleaning floors.",
+    "category": "通用英文词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/J0YIwLucci09YYkTCdmchiSknzb",
+    "note": "既有科学含义，也有日常“吸尘器”含义。",
+    "example": "Nature hates a vacuum.",
+    "exampleZh": "自然界厌恶真空。",
+    "englishExplanation": "A space with little or no matter, or a device used for cleaning floors.",
+    "englishMeaning": "Vacuum can mean empty space, a cleaner, or a lack of something.",
+    "meaningEn": "A space with little or no matter, or a device used for cleaning floors.",
+    "definition": "A space without matter; a vacuum cleaner; an empty or unfilled state.",
+    "phonetic": "/ˈvækjuːm/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "Nature hates a vacuum.",
+        "zh": "自然界厌恶真空。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "vacuum example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "vacuum usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "032",
+    "term": "adjourn",
+    "word": "adjourn",
+    "meaning": "休庭；延期；暂停",
+    "zh": "休庭；延期；暂停",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/DaJ8woYS1inuoFkFTcicNJWonMg",
+    "note": "会议/法庭语境常用。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "033",
+    "term": "cream",
+    "word": "cream",
+    "meaning": "奶油；精华；面霜",
+    "zh": "奶油；精华；面霜",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/UmLiw35lOicVdnkYSfIcszSanDd",
+    "note": "生活用品与食品语境常见。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW012",
+    "term": "hermit",
+    "word": "hermit",
+    "meaning": "隐士；离群索居者",
+    "zh": "隐士；离群索居者",
+    "en": "A person who lives alone and avoids contact with other people.",
+    "category": "通用英文词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/R3khwr7HYiFEHFkVcYic9gemndc",
+    "note": "常用于文学、宗教或生活方式描述。",
+    "example": "After retirement, he lived like a hermit in the mountains.",
+    "exampleZh": "退休后，他像隐士一样住在山里。",
+    "englishExplanation": "A person who lives alone and avoids contact with other people.",
+    "englishMeaning": "A hermit is someone who chooses to live in isolation.",
+    "meaningEn": "A person who lives alone and avoids contact with other people.",
+    "definition": "A person living in solitude, often for religious or personal reasons.",
+    "phonetic": "/ˈhɜːrmɪt/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "After retirement, he lived like a hermit in the mountains.",
+        "zh": "退休后，他像隐士一样住在山里。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "hermit example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "hermit usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW011",
+    "term": "counselor",
+    "word": "counselor",
+    "meaning": "顾问；辅导员；律师",
+    "zh": "顾问；辅导员；律师",
+    "en": "A person who gives advice, guidance, or professional support.",
+    "category": "通用英文词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/JITCw9cn5iUVRLkT7fQcHhiTnCg",
+    "note": "可指学校辅导员、心理咨询师、顾问或法律顾问。",
+    "example": "The school counselor helped him choose his courses.",
+    "exampleZh": "学校辅导员帮助他选择课程。",
+    "englishExplanation": "A person who gives advice, guidance, or professional support.",
+    "englishMeaning": "A counselor provides advice or guidance in school, mental health, legal, or professional settings.",
+    "meaningEn": "A person who gives advice, guidance, or professional support.",
+    "definition": "A person trained to give guidance or advice.",
+    "phonetic": "/ˈkaʊnsələr/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "The school counselor helped him choose his courses.",
+        "zh": "学校辅导员帮助他选择课程。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "counselor example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "counselor usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "036",
+    "term": "overwhelming",
+    "word": "overwhelming",
+    "meaning": "压倒性的；势不可挡的",
+    "zh": "压倒性的；势不可挡的",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/BKK4wjlRSiUpvEk1iNTcbwuunlg",
+    "note": "可形容数量、情绪、优势等。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "037",
+    "term": "groom",
+    "word": "groom",
+    "meaning": "新郎；培养；打理",
+    "zh": "新郎；培养；打理",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/JyKJwLQjsiQj1UkC7xcckJCXnNc",
+    "note": "多义词，注意语境。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "038",
+    "term": "warrant",
+    "word": "warrant",
+    "meaning": "授权令；搜查令；正当理由；保证",
+    "zh": "授权令；搜查令；正当理由；保证",
+    "en": "",
+    "category": "通用英文词汇 / 短语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/PnaUwNZTXiC2r7kVPymceoF1nZf",
+    "note": "法律语境常指令状。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "039",
+    "term": "courtroom",
+    "word": "courtroom",
+    "meaning": "法庭；审判室",
+    "zh": "法庭；审判室",
+    "en": "",
+    "category": "法律 / 法庭相关词汇",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/ZgaFwfJekiFOP3kqGsUc4XUlnec",
+    "note": "courtroom 指具体审判空间。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "040",
+    "term": "courthouse",
+    "word": "courthouse",
+    "meaning": "法院大楼",
+    "zh": "法院大楼",
+    "en": "",
+    "category": "法律 / 法庭相关词汇",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/UyVdw9rT6iLVNIksK5JcVQngnrt",
+    "note": "与 courtroom 区分：courthouse 是建筑。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW017",
+    "term": "jury",
+    "word": "jury",
+    "meaning": "陪审团",
+    "zh": "陪审团",
+    "en": "A group of people chosen to listen to a trial and decide the facts.",
+    "category": "法律/法庭词汇",
+    "level": "中级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/CMFfwrmj1ikMaTkATNicnjIGnxh",
+    "note": "常见搭配：jury trial, grand jury, jury duty。",
+    "example": "The jury found the defendant not guilty.",
+    "exampleZh": "陪审团裁定被告无罪。",
+    "englishExplanation": "A group of people chosen to listen to a trial and decide the facts.",
+    "englishMeaning": "A jury is a group of citizens who evaluate evidence and reach a verdict in court.",
+    "meaningEn": "A group of people chosen to listen to a trial and decide the facts.",
+    "definition": "A body of people sworn to give a verdict in a legal case.",
+    "phonetic": "/ˈdʒʊri/",
+    "difficulty": "中级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "The jury found the defendant not guilty.",
+        "zh": "陪审团裁定被告无罪。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "jury example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "jury usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "042",
+    "term": "prosecution",
+    "word": "prosecution",
+    "meaning": "起诉；检方",
+    "zh": "起诉；检方",
+    "en": "",
+    "category": "法律 / 法庭相关词汇",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/DchGwvcldiW7vikBs6ecqNYlnDg",
+    "note": "可指起诉行为或检察一方。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW016",
+    "term": "render",
+    "word": "render",
+    "meaning": "作出；给予；渲染；使成为",
+    "zh": "作出；给予；渲染；使成为",
+    "en": "To give, provide, formally deliver, make something become, or produce an image by computer.",
+    "category": "通用/法律/技术词汇",
+    "level": "高级",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/QRkbwWBN4i5v1LkK6hScq1LPnNb",
+    "note": "法律中常见 render a verdict；技术中指“渲染”。",
+    "example": "The jury rendered a verdict after three hours.",
+    "exampleZh": "陪审团三小时后作出了裁决。",
+    "englishExplanation": "To give, provide, formally deliver, make something become, or produce an image by computer.",
+    "englishMeaning": "Render has meanings in law, general English, and computing, such as deliver, make, or generate visuals.",
+    "meaningEn": "To give, provide, formally deliver, make something become, or produce an image by computer.",
+    "definition": "To provide, cause to be, formally pronounce, or generate a visual output.",
+    "phonetic": "/ˈrendər/",
+    "difficulty": "高级",
+    "status": "未学习",
+    "examples": [
+      {
+        "en": "The jury rendered a verdict after three hours.",
+        "zh": "陪审团三小时后作出了裁决。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "render example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "render usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "044",
+    "term": "testimony",
+    "word": "testimony",
+    "meaning": "证词；证言",
+    "zh": "证词；证言",
+    "en": "",
+    "category": "法律 / 法庭相关词汇",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/N65Ewcn07ivsOOkcSibccv7Snjd",
+    "note": "法庭证据与证人陈述相关。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "045",
+    "term": "plea",
+    "word": "plea",
+    "meaning": "请求；抗辩；认罪答辩",
+    "zh": "请求；抗辩；认罪答辩",
+    "en": "",
+    "category": "法律 / 法庭相关词汇",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/UzA9wBbI7iZVUNkaIobcFWFWnjh",
+    "note": "常见 plea bargain 认罪协商。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "046",
+    "term": "OCD / Obsessive-Compulsive Disorder",
+    "word": "OCD / Obsessive-Compulsive Disorder",
+    "meaning": "强迫症",
+    "zh": "强迫症",
+    "en": "",
+    "category": "医学 / 心理术语",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/ROLkwJKUAiBxCfkcTIIc2hekn6d",
+    "note": "医学/心理学术语，全称 Obsessive-Compulsive Disorder。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "047",
+    "term": "Chairman",
+    "word": "Chairman",
+    "meaning": "董事长",
+    "zh": "董事长",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "公司治理与董事会相关职位。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "048",
+    "term": "Shareholder",
+    "word": "Shareholder",
+    "meaning": "股东",
+    "zh": "股东",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "持有公司股份的人或机构。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "049",
+    "term": "CEO / Chief Executive Officer",
+    "word": "CEO / Chief Executive Officer",
+    "meaning": "首席执行官",
+    "zh": "首席执行官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "公司最高行政负责人。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "050",
+    "term": "COO / Chief Operating Officer",
+    "word": "COO / Chief Operating Officer",
+    "meaning": "首席运营官",
+    "zh": "首席运营官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责公司运营管理。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "051",
+    "term": "CFO / Chief Financial Officer",
+    "word": "CFO / Chief Financial Officer",
+    "meaning": "首席财务官",
+    "zh": "首席财务官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责财务、资本、预算等。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "052",
+    "term": "CTO / Chief Technology Officer",
+    "word": "CTO / Chief Technology Officer",
+    "meaning": "首席技术官",
+    "zh": "首席技术官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责技术战略与研发体系。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "053",
+    "term": "CIO / Chief Information Officer",
+    "word": "CIO / Chief Information Officer",
+    "meaning": "首席信息官",
+    "zh": "首席信息官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责企业信息化与 IT 战略。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "054",
+    "term": "CMO / Chief Marketing Officer",
+    "word": "CMO / Chief Marketing Officer",
+    "meaning": "首席营销官",
+    "zh": "首席营销官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责品牌、市场与营销增长。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "055",
+    "term": "CHRO / Chief Human Resources Officer",
+    "word": "CHRO / Chief Human Resources Officer",
+    "meaning": "首席人力资源官",
+    "zh": "首席人力资源官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责人力资源战略与组织发展。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "056",
+    "term": "CLO / Chief Legal Officer",
+    "word": "CLO / Chief Legal Officer",
+    "meaning": "首席法务官",
+    "zh": "首席法务官",
+    "en": "",
+    "category": "商务英语 / 职位类",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/A2HlwUIkpiC9TEk6BqBcmPisn0f",
+    "note": "负责企业法律事务与合规。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "057",
+    "term": "词汇背诵小程序｜知识库词表梳理与开发需求",
+    "word": "词汇背诵小程序｜知识库词表梳理与开发需求",
+    "meaning": "小程序开发需求与词表梳理",
+    "zh": "小程序开发需求与词表梳理",
+    "en": "",
+    "category": "项目 / 需求类文档",
+    "level": "基础",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/IPejwLveciZl3AkAQVYcrzUvnp9",
+    "note": "相关需求文档条目，便于回溯来源。",
+    "example": "",
+    "exampleZh": ""
+  },
+  {
+    "id": "NEW001",
+    "term": "insanity",
+    "word": "insanity",
+    "meaning": "精神错乱；疯狂；极端愚蠢的行为",
+    "zh": "精神错乱；疯狂；极端愚蠢的行为",
+    "en": "A state of serious mental illness, or extremely foolish and unreasonable behavior.",
+    "englishExplanation": "A state of serious mental illness, or extremely foolish and unreasonable behavior.",
+    "englishMeaning": "Insanity means severe mental disorder or behavior that seems wildly unreasonable.",
+    "meaningEn": "A state of serious mental illness, or extremely foolish and unreasonable behavior.",
+    "definition": "A state of being seriously mentally ill; extreme foolishness.",
+    "phonetic": "/ɪnˈsænəti/",
+    "category": "通用英文词汇",
+    "difficulty": "中级",
+    "level": "中级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "可用于医学、法律或口语中表示疯狂/荒唐。",
+    "example": "Doing the same thing again and expecting a different result is often called insanity.",
+    "exampleZh": "反复做同一件事却期待不同结果，常被称为疯狂。",
+    "examples": [
+      {
+        "en": "Doing the same thing again and expecting a different result is often called insanity.",
+        "zh": "反复做同一件事却期待不同结果，常被称为疯狂。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "insanity example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "insanity usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW002",
+    "term": "snuck",
+    "word": "snuck",
+    "meaning": "偷偷溜走；偷偷进入；sneak 的过去式/过去分词",
+    "zh": "偷偷溜走；偷偷进入；sneak 的过去式/过去分词",
+    "en": "The past tense and past participle of sneak, meaning to move quietly and secretly.",
+    "englishExplanation": "The past tense and past participle of sneak, meaning to move quietly and secretly.",
+    "englishMeaning": "Snuck means moved quietly or secretly to avoid being noticed.",
+    "meaningEn": "The past tense and past participle of sneak, meaning to move quietly and secretly.",
+    "definition": "Past tense and past participle of sneak.",
+    "phonetic": "/snʌk/",
+    "category": "通用英文词汇",
+    "difficulty": "中级",
+    "level": "中级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "美式英语常用；英式英语中 sneaked 也很常见。",
+    "example": "He snuck out of the room while everyone was talking.",
+    "exampleZh": "大家说话时，他偷偷溜出了房间。",
+    "examples": [
+      {
+        "en": "He snuck out of the room while everyone was talking.",
+        "zh": "大家说话时，他偷偷溜出了房间。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "snuck example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "snuck usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW003",
+    "term": "custody",
+    "word": "custody",
+    "meaning": "监护权；拘留；保管",
+    "zh": "监护权；拘留；保管",
+    "en": "The legal right to care for someone, especially a child, or the state of being held by police.",
+    "englishExplanation": "The legal right to care for someone, especially a child, or the state of being held by police.",
+    "englishMeaning": "Custody means legal care, protection, or being detained by authorities.",
+    "meaningEn": "The legal right to care for someone, especially a child, or the state of being held by police.",
+    "definition": "Legal care or control; detention by police or authorities.",
+    "phonetic": "/ˈkʌstədi/",
+    "category": "法律/法庭词汇",
+    "difficulty": "高级",
+    "level": "高级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "常见搭配：child custody, police custody, in custody。",
+    "example": "The father was granted custody of the child.",
+    "exampleZh": "父亲获得了孩子的监护权。",
+    "examples": [
+      {
+        "en": "The father was granted custody of the child.",
+        "zh": "父亲获得了孩子的监护权。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "custody example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "custody usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW004",
+    "term": "allege",
+    "word": "allege",
+    "meaning": "声称；指控；宣称但尚未证实",
+    "zh": "声称；指控；宣称但尚未证实",
+    "en": "To say that something is true, especially as an accusation, without having proved it yet.",
+    "englishExplanation": "To say that something is true, especially as an accusation, without having proved it yet.",
+    "englishMeaning": "Allege means to claim something, usually wrongdoing, before it is proven.",
+    "meaningEn": "To say that something is true, especially as an accusation, without having proved it yet.",
+    "definition": "To claim or assert that something is true without proof.",
+    "phonetic": "/əˈledʒ/",
+    "category": "法律/通用词汇",
+    "difficulty": "高级",
+    "level": "高级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "新闻和法律语境中常用，强调“尚未证实”。",
+    "example": "The report alleges that the company broke the law.",
+    "exampleZh": "该报告声称这家公司违反了法律。",
+    "examples": [
+      {
+        "en": "The report alleges that the company broke the law.",
+        "zh": "该报告声称这家公司违反了法律。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "allege example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "allege usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW005",
+    "term": "facial",
+    "word": "facial",
+    "meaning": "面部的；面部护理",
+    "zh": "面部的；面部护理",
+    "en": "Related to the face, or a beauty treatment for the face.",
+    "englishExplanation": "Related to the face, or a beauty treatment for the face.",
+    "englishMeaning": "Facial means connected with the face or a face-care treatment.",
+    "meaningEn": "Related to the face, or a beauty treatment for the face.",
+    "definition": "Of or relating to the face; a cosmetic treatment for the face.",
+    "phonetic": "/ˈfeɪʃl/",
+    "category": "通用英文词汇",
+    "difficulty": "初级",
+    "level": "初级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "常见搭配：facial expression, facial recognition。",
+    "example": "Facial recognition technology can identify people by their faces.",
+    "exampleZh": "面部识别技术可以通过人脸识别人。",
+    "examples": [
+      {
+        "en": "Facial recognition technology can identify people by their faces.",
+        "zh": "面部识别技术可以通过人脸识别人。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "facial example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "facial usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW006",
+    "term": "antidepressant",
+    "word": "antidepressant",
+    "meaning": "抗抑郁药",
+    "zh": "抗抑郁药",
+    "en": "A medicine used to treat depression and some anxiety-related conditions.",
+    "englishExplanation": "A medicine used to treat depression and some anxiety-related conditions.",
+    "englishMeaning": "An antidepressant is a drug used to help relieve depression.",
+    "meaningEn": "A medicine used to treat depression and some anxiety-related conditions.",
+    "definition": "A drug used to treat depression.",
+    "phonetic": "/ˌæntidɪˈpresnt/",
+    "category": "医学/心理术语",
+    "difficulty": "高级",
+    "level": "高级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "医学词汇，使用时注意语境专业性。",
+    "example": "The doctor prescribed an antidepressant after evaluating her symptoms.",
+    "exampleZh": "医生评估她的症状后开了抗抑郁药。",
+    "examples": [
+      {
+        "en": "The doctor prescribed an antidepressant after evaluating her symptoms.",
+        "zh": "医生评估她的症状后开了抗抑郁药。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "antidepressant example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "antidepressant usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW007",
+    "term": "pastry",
+    "word": "pastry",
+    "meaning": "油酥面团；糕点；酥皮点心",
+    "zh": "油酥面团；糕点；酥皮点心",
+    "en": "A baked food made from dough with flour, fat, and water, often sweet or filled.",
+    "englishExplanation": "A baked food made from dough with flour, fat, and water, often sweet or filled.",
+    "englishMeaning": "Pastry refers to baked dough products such as pies, tarts, and sweet snacks.",
+    "meaningEn": "A baked food made from dough with flour, fat, and water, often sweet or filled.",
+    "definition": "A type of baked dough or a small baked sweet food.",
+    "phonetic": "/ˈpeɪstri/",
+    "category": "生活/食物词汇",
+    "difficulty": "初级",
+    "level": "初级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "可指点心，也可指制作点心用的酥皮面团。",
+    "example": "She bought a fresh pastry from the bakery.",
+    "exampleZh": "她从面包店买了一个新鲜糕点。",
+    "examples": [
+      {
+        "en": "She bought a fresh pastry from the bakery.",
+        "zh": "她从面包店买了一个新鲜糕点。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "pastry example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "pastry usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW008",
+    "term": "bail",
+    "word": "bail",
+    "meaning": "保释；保释金",
+    "zh": "保释；保释金",
+    "en": "Money or a legal arrangement that allows an arrested person to be released until trial.",
+    "englishExplanation": "Money or a legal arrangement that allows an arrested person to be released until trial.",
+    "englishMeaning": "Bail is temporary release from custody, usually with money as security.",
+    "meaningEn": "Money or a legal arrangement that allows an arrested person to be released until trial.",
+    "definition": "Temporary release of an accused person awaiting trial, often secured by money.",
+    "phonetic": "/beɪl/",
+    "category": "法律/法庭词汇",
+    "difficulty": "高级",
+    "level": "高级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "常见搭配：post bail, set bail, out on bail。",
+    "example": "The judge set bail at ten thousand dollars.",
+    "exampleZh": "法官将保释金定为一万美元。",
+    "examples": [
+      {
+        "en": "The judge set bail at ten thousand dollars.",
+        "zh": "法官将保释金定为一万美元。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "bail example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "bail usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW009",
+    "term": "footage",
+    "word": "footage",
+    "meaning": "视频片段；影像资料；镜头",
+    "zh": "视频片段；影像资料；镜头",
+    "en": "Recorded video material, especially from cameras, films, or news reports.",
+    "englishExplanation": "Recorded video material, especially from cameras, films, or news reports.",
+    "englishMeaning": "Footage means recorded video material or film scenes.",
+    "meaningEn": "Recorded video material, especially from cameras, films, or news reports.",
+    "definition": "A length or amount of recorded film or video.",
+    "phonetic": "/ˈfʊtɪdʒ/",
+    "category": "媒体/通用词汇",
+    "difficulty": "中级",
+    "level": "中级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "不可数名词，常见于新闻、影视、监控语境。",
+    "example": "Security footage showed the suspect entering the building.",
+    "exampleZh": "监控录像显示嫌疑人进入了大楼。",
+    "examples": [
+      {
+        "en": "Security footage showed the suspect entering the building.",
+        "zh": "监控录像显示嫌疑人进入了大楼。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "footage example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "footage usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW010",
+    "term": "apparently",
+    "word": "apparently",
+    "meaning": "显然；看来；据说",
+    "zh": "显然；看来；据说",
+    "en": "Used to say that something seems true based on what you know, though it may not be certain.",
+    "englishExplanation": "Used to say that something seems true based on what you know, though it may not be certain.",
+    "englishMeaning": "Apparently means seemingly, evidently, or according to what has been heard.",
+    "meaningEn": "Used to say that something seems true based on what you know, though it may not be certain.",
+    "definition": "As far as one knows or can see; seemingly.",
+    "phonetic": "/əˈpærəntli/",
+    "category": "通用英文词汇",
+    "difficulty": "中级",
+    "level": "中级",
+    "status": "未学习",
+    "sourceUrl": "",
+    "note": "可表示根据表象推断，也可表示“据说”。",
+    "example": "Apparently, the meeting has been canceled.",
+    "exampleZh": "看来会议已经取消了。",
+    "examples": [
+      {
+        "en": "Apparently, the meeting has been canceled.",
+        "zh": "看来会议已经取消了。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "apparently example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "apparently usage",
+        "zh": "常见用法"
+      }
+    ]
+  },
+  {
+    "id": "NEW020",
+    "term": "OCD",
+    "word": "OCD",
+    "meaning": "强迫症；强迫性障碍",
+    "zh": "强迫症；强迫性障碍",
+    "en": "Obsessive-Compulsive Disorder, a mental health condition involving unwanted repeated thoughts and compulsive behaviors.",
+    "englishExplanation": "Obsessive-Compulsive Disorder, a mental health condition involving unwanted repeated thoughts and compulsive behaviors.",
+    "englishMeaning": "OCD is a mental health disorder marked by obsessions and compulsions.",
+    "meaningEn": "Obsessive-Compulsive Disorder, a mental health condition involving unwanted repeated thoughts and compulsive behaviors.",
+    "definition": "A mental health condition involving obsessions and compulsive behaviors.",
+    "phonetic": "/ˌoʊ siː ˈdiː/",
+    "category": "医学/心理术语",
+    "difficulty": "中级",
+    "level": "中级",
+    "status": "未学习",
+    "sourceUrl": "https://hcnto4ksb7e9.feishu.cn/wiki/ROLkwJKUAiBxCfkcTIIc2hekn6d",
+    "note": "全称为 Obsessive-Compulsive Disorder。",
+    "example": "OCD is more than simply liking things to be neat.",
+    "exampleZh": "强迫症不只是喜欢东西整洁那么简单。",
+    "examples": [
+      {
+        "en": "OCD is more than simply liking things to be neat.",
+        "zh": "强迫症不只是喜欢东西整洁那么简单。"
+      }
+    ],
+    "phrases": [
+      {
+        "en": "OCD example",
+        "zh": "相关例句"
+      },
+      {
+        "en": "OCD usage",
+        "zh": "常见用法"
+      }
+    ]
+  }
+];
+let words=loadWords(),progress=loadProgress(),state={mode:'card',category:'all',level:'all',learningStatus:'all',query:'',index:0};
+const $=id=>document.getElementById(id),stage=$('stage');
+
+const fallbackExamples={
+'Hallucination':['RAG helps reduce hallucinations by grounding the model\'s answers in real sources.','RAG 通过让模型答案基于真实来源，从而减少幻觉问题。',['AI hallucination','reduce hallucinations','model hallucination']],
+'Fine-tuning':['We can fine-tune the base LLM with enterprise data.','我们可以用企业数据对基础大模型进行微调。',['fine-tune a model','domain fine-tuning','instruction fine-tuning']],
+'RAG / Retrieval Augmented Generation':['We built a customer support chatbot using RAG over our product documentation.','我们基于产品文档用 RAG 搭建了一个客服机器人。',['RAG pipeline','retrieved context','knowledge base RAG']],
+'Sequential Thinking':['Sequential thinking helps break a complex task into smaller reasoning steps.','顺序思考有助于把复杂任务拆成更小的推理步骤。',['step-by-step reasoning','sequential process','reasoning chain']],
+'τ scaling law':['The τ scaling law describes how performance changes as the parameter grows.','τ 缩放定律描述了参数增长时性能如何变化。',['scaling law','model performance','parameter scaling']],
+'Quantum Tunneling Effect':['Quantum tunneling effect becomes important at extremely small semiconductor scales.','在极小的半导体尺度下，量子隧穿效应会变得很重要。',['quantum tunneling','tunneling current','semiconductor physics']],
+'Conventional Design':['Conventional design may not meet the performance needs of next-generation chips.','传统设计可能无法满足下一代芯片的性能需求。',['conventional approach','traditional design','design limitation']],
+'2D':['A 2D chip layout places components mainly on a flat plane.','二维芯片布局主要把组件放在一个平面上。',['2D layout','2D chip design','two-dimensional structure']],
+'Chiplet':['A chiplet architecture combines multiple small chips into one package.','芯粒架构把多个小芯片组合到一个封装中。',['chiplet architecture','advanced packaging','modular chip']],
+'3D Stacking':['3D stacking can improve bandwidth by placing chips vertically.','三维堆叠通过垂直放置芯片来提升带宽。',['3D stacking technology','vertical integration','stacked chips']],
+'transistor':['A transistor acts like a tiny switch inside an electronic circuit.','晶体管就像电子电路中的微型开关。',['transistor density','field-effect transistor','switching device']],
+'semiconductor':['A semiconductor is essential for making modern computer chips.','半导体是制造现代计算机芯片的关键材料。',['semiconductor industry','semiconductor device','chip manufacturing']],
+'unveil':['The company will unveil its new AI product next week.','这家公司将在下周发布新的 AI 产品。',['unveil a product','officially unveil','unveil a plan']],
+'Escalate':['Please escalate this issue to the engineering manager.','请把这个问题升级给工程经理处理。',['escalate an issue','escalate quickly','escalation path']],
+'commencement':['The commencement ceremony will begin at ten o\'clock.','毕业典礼将在十点开始。',['commencement ceremony','commencement date','at the commencement of']],
+'well-trodden trope':['The story relies on a well-trodden trope, but the ending feels fresh.','这个故事用了老套桥段，但结尾仍然很新鲜。',['well-trodden path','common trope','narrative trope']],
+'perspective':['From my perspective, the proposal is practical and clear.','从我的角度看，这个方案实际且清晰。',['from my perspective','new perspective','broader perspective']],
+'intentional':['The layout is simple, but every choice is intentional.','这个布局很简单，但每个选择都是有意设计的。',['intentional design','intentional choice','be intentional about']],
+'approach':['We need a different approach to solve this problem.','我们需要一种不同的方法来解决这个问题。',['practical approach','new approach','approach a problem']],
+'consecutive':['The team won three consecutive games.','这个团队连续赢了三场比赛。',['consecutive days','consecutive years','consecutive wins']],
+'coma':['The patient remained in a coma for several days.','病人昏迷了好几天。',['in a coma','fall into a coma','coma patient']],
+'paycheck':['Many workers live paycheck to paycheck.','许多工人过着月光族式的生活。',['monthly paycheck','paycheck to paycheck','receive a paycheck']],
+'omit':['Do not omit important details from the report.','不要在报告中遗漏重要细节。',['omit details','omit information','be omitted from']],
+'claim':['The company claims that the product is safe.','公司声称该产品是安全的。',['claim responsibility','insurance claim','make a claim']],
+'sustain':['The business must sustain growth over the long term.','企业必须长期维持增长。',['sustain growth','sustain damage','sustain effort']],
+'identical':['The two documents are almost identical.','这两份文件几乎完全相同。',['identical twins','identical copy','nearly identical']],
+'professionalism':['Her professionalism impressed everyone in the meeting.','她的专业素养给会议中的每个人留下了深刻印象。',['show professionalism','high professionalism','professional standards']],
+'crucial':['Clear communication is crucial for remote teams.','清晰沟通对远程团队至关重要。',['crucial role','crucial factor','crucial decision']],
+'anxiety':['Public speaking can cause anxiety for many people.','公开演讲会让许多人感到焦虑。',['reduce anxiety','social anxiety','anxiety disorder']],
+'reverse':['The court decided to reverse the earlier judgment.','法院决定撤销此前的判决。',['reverse a decision','reverse direction','reverse order']],
+'vacuum':['Innovation cannot happen in a vacuum.','创新不可能脱离环境凭空发生。',['in a vacuum','vacuum cleaner','power vacuum']],
+'adjourn':['The judge decided to adjourn the hearing until Monday.','法官决定将听证会延期到周一。',['adjourn a meeting','adjourn the court','meeting adjourned']],
+'cream':['Apply the cream gently to the skin.','把面霜轻轻涂在皮肤上。',['skin cream','cream cheese','the cream of']],
+'hermit':['After retirement, he lived like a hermit in the mountains.','退休后，他像隐士一样住在山里。',['live like a hermit','hermit lifestyle','social hermit']],
+'counselor':['The school counselor helped students manage stress.','学校辅导员帮助学生管理压力。',['school counselor','legal counselor','career counselor']],
+'overwhelming':['The response from users was overwhelming.','用户的反响非常强烈。',['overwhelming majority','overwhelming evidence','feel overwhelming']],
+'groom':['The company is grooming her for a leadership role.','公司正在培养她担任领导职位。',['groom for leadership','bride and groom','groom talent']],
+'warrant':['The police obtained a warrant to search the house.','警方获得了搜查这所房子的搜查令。',['search warrant','arrest warrant','warrant attention']],
+'courtroom':['The witness entered the courtroom quietly.','证人安静地走进法庭。',['courtroom drama','courtroom testimony','inside the courtroom']],
+'courthouse':['Reporters waited outside the courthouse.','记者们在法院大楼外等候。',['county courthouse','outside the courthouse','courthouse steps']],
+'jury':['The jury reached a verdict after two days.','陪审团两天后作出了裁决。',['jury trial','jury duty','jury verdict']],
+'prosecution':['The prosecution presented new evidence.','检方提交了新的证据。',['the prosecution argues','prosecution witness','criminal prosecution']],
+'render':['The jury will render its verdict tomorrow.','陪审团将在明天作出裁决。',['render a verdict','render services','render useless']],
+'testimony':['Her testimony was central to the case.','她的证词是这个案件的核心。',['give testimony','witness testimony','expert testimony']],
+'plea':['The defendant entered a guilty plea.','被告作出了认罪答辩。',['guilty plea','plea bargain','enter a plea']],
+'OCD / Obsessive-Compulsive Disorder':['OCD can seriously affect a person\'s daily life.','强迫症会严重影响一个人的日常生活。',['OCD symptoms','obsessive-compulsive disorder','mental health condition']],
+'Chairman':['The chairman opened the annual board meeting.','董事长主持了年度董事会会议。',['chairman of the board','executive chairman','board chairman']],
+'Shareholder':['Each shareholder has the right to vote.','每位股东都有投票权。',['major shareholder','shareholder meeting','shareholder value']],
+'CEO / Chief Executive Officer':['The CEO announced a new growth strategy.','首席执行官宣布了新的增长战略。',['chief executive officer','CEO statement','company CEO']],
+'COO / Chief Operating Officer':['The COO is responsible for daily operations.','首席运营官负责日常运营。',['chief operating officer','COO role','business operations']],
+'CFO / Chief Financial Officer':['The CFO reviewed the company\'s quarterly results.','首席财务官审查了公司的季度业绩。',['chief financial officer','CFO report','financial strategy']],
+'CTO / Chief Technology Officer':['The CTO leads the company\'s technology roadmap.','首席技术官负责公司的技术路线图。',['chief technology officer','CTO office','technology roadmap']],
+'CIO / Chief Information Officer':['The CIO manages the enterprise information systems.','首席信息官管理企业信息系统。',['chief information officer','CIO strategy','information systems']],
+'CMO / Chief Marketing Officer':['The CMO launched a global brand campaign.','首席营销官发起了一场全球品牌活动。',['chief marketing officer','CMO campaign','marketing strategy']],
+'CHRO / Chief Human Resources Officer':['The CHRO focuses on culture and talent development.','首席人力资源官关注文化和人才发展。',['chief human resources officer','CHRO role','talent strategy']],
+'CLO / Chief Legal Officer':['The CLO advised the board on compliance risks.','首席法务官就合规风险向董事会提供建议。',['chief legal officer','CLO advice','legal compliance']],
+'词汇背诵小程序｜知识库词表梳理与开发需求':['This document defines the requirements for a vocabulary learning mini app.','该文档定义了词汇学习小程序的需求。',['product requirement','vocabulary app','learning workflow']]
+};
+
+
+const phraseZh={
+'AI hallucination':'AI 幻觉','reduce hallucinations':'减少幻觉','model hallucination':'模型幻觉',
+'fine-tune a model':'微调模型','domain fine-tuning':'领域微调','instruction fine-tuning':'指令微调',
+'RAG pipeline':'RAG 流程','retrieved context':'检索到的上下文','knowledge base RAG':'知识库 RAG',
+'step-by-step reasoning':'逐步推理','sequential process':'顺序流程','reasoning chain':'推理链',
+'scaling law':'缩放定律','model performance':'模型性能','parameter scaling':'参数缩放',
+'quantum tunneling':'量子隧穿','tunneling current':'隧穿电流','semiconductor physics':'半导体物理',
+'conventional approach':'传统方法','traditional design':'传统设计','design limitation':'设计限制',
+'2D layout':'二维布局','2D chip design':'二维芯片设计','two-dimensional structure':'二维结构',
+'chiplet architecture':'芯粒架构','advanced packaging':'先进封装','modular chip':'模块化芯片',
+'3D stacking technology':'三维堆叠技术','vertical integration':'垂直集成','stacked chips':'堆叠芯片',
+'transistor density':'晶体管密度','field-effect transistor':'场效应晶体管','switching device':'开关器件',
+'semiconductor industry':'半导体产业','semiconductor device':'半导体器件','chip manufacturing':'芯片制造',
+'unveil a product':'发布产品','officially unveil':'正式公布','unveil a plan':'公布计划',
+'escalate an issue':'升级问题','escalate quickly':'迅速升级','escalation path':'升级路径',
+'commencement ceremony':'毕业典礼','commencement date':'开始日期','at the commencement of':'在……开始时',
+'well-trodden path':'老路；常见路径','common trope':'常见套路','narrative trope':'叙事套路',
+'from my perspective':'从我的角度看','new perspective':'新视角','broader perspective':'更广阔的视角',
+'intentional design':'有意设计','intentional choice':'有意选择','be intentional about':'有意识地对待',
+'practical approach':'实际方法','new approach':'新方法','approach a problem':'处理问题',
+'consecutive days':'连续几天','consecutive years':'连续几年','consecutive wins':'连胜',
+'in a coma':'处于昏迷中','fall into a coma':'陷入昏迷','coma patient':'昏迷病人',
+'monthly paycheck':'月薪','paycheck to paycheck':'月光式生活','receive a paycheck':'领薪水',
+'omit details':'省略细节','omit information':'遗漏信息','be omitted from':'被从……中省略',
+'claim responsibility':'承担责任','insurance claim':'保险索赔','make a claim':'提出主张/索赔',
+'sustain growth':'维持增长','sustain damage':'遭受损害','sustain effort':'持续努力',
+'identical twins':'同卵双胞胎','identical copy':'完全相同的副本','nearly identical':'几乎完全相同',
+'show professionalism':'展现专业素养','high professionalism':'高度专业精神','professional standards':'职业标准',
+'crucial role':'关键作用','crucial factor':'关键因素','crucial decision':'关键决定',
+'reduce anxiety':'缓解焦虑','social anxiety':'社交焦虑','anxiety disorder':'焦虑障碍',
+'reverse a decision':'撤销决定','reverse direction':'反方向','reverse order':'相反顺序',
+'in a vacuum':'脱离环境；凭空','vacuum cleaner':'吸尘器','power vacuum':'权力真空',
+'adjourn a meeting':'休会','adjourn the court':'休庭','meeting adjourned':'会议休会',
+'skin cream':'护肤霜','cream cheese':'奶油奶酪','the cream of':'……中的精华',
+'live like a hermit':'像隐士一样生活','hermit lifestyle':'隐居生活方式','social hermit':'社交隐士',
+'school counselor':'学校辅导员','legal counselor':'法律顾问','career counselor':'职业顾问',
+'overwhelming majority':'压倒性多数','overwhelming evidence':'压倒性证据','feel overwhelming':'让人不堪重负',
+'groom for leadership':'培养成领导者','bride and groom':'新娘和新郎','groom talent':'培养人才',
+'search warrant':'搜查令','arrest warrant':'逮捕令','warrant attention':'值得关注',
+'courtroom drama':'法庭剧','courtroom testimony':'法庭证词','inside the courtroom':'在法庭内',
+'county courthouse':'县法院大楼','outside the courthouse':'在法院大楼外','courthouse steps':'法院大楼台阶',
+'jury trial':'陪审团审判','jury duty':'陪审义务','jury verdict':'陪审团裁决',
+'the prosecution argues':'检方主张','prosecution witness':'控方证人','criminal prosecution':'刑事起诉',
+'render a verdict':'作出裁决','render services':'提供服务','render useless':'使……无用',
+'give testimony':'作证','witness testimony':'证人证词','expert testimony':'专家证词',
+'guilty plea':'认罪答辩','plea bargain':'认罪协商','enter a plea':'作出答辩',
+'OCD symptoms':'强迫症症状','obsessive-compulsive disorder':'强迫症','mental health condition':'心理健康状况',
+'chairman of the board':'董事会主席','executive chairman':'执行董事长','board chairman':'董事会主席',
+'major shareholder':'大股东','shareholder meeting':'股东大会','shareholder value':'股东价值',
+'chief executive officer':'首席执行官','CEO statement':'CEO 声明','company CEO':'公司首席执行官',
+'chief operating officer':'首席运营官','COO role':'COO 职责','business operations':'业务运营',
+'chief financial officer':'首席财务官','CFO report':'CFO 报告','financial strategy':'财务战略',
+'chief technology officer':'首席技术官','CTO office':'CTO 办公室/团队','technology roadmap':'技术路线图',
+'chief information officer':'首席信息官','CIO strategy':'CIO 战略','information systems':'信息系统',
+'chief marketing officer':'首席营销官','CMO campaign':'CMO 营销活动','marketing strategy':'营销战略',
+'chief human resources officer':'首席人力资源官','CHRO role':'CHRO 职责','talent strategy':'人才战略',
+'chief legal officer':'首席法务官','CLO advice':'CLO 建议','legal compliance':'法律合规',
+'product requirement':'产品需求','vocabulary app':'词汇应用','learning workflow':'学习流程'
+};
+function phraseParts(p){if(typeof p==='object'&&p){return {en:p.en||p.term||p.phrase||'',zh:p.zh||p.meaning||p.translation||phraseZh[p.en||p.term||p.phrase]||''}}return {en:String(p),zh:phraseZh[String(p)]||''}}
+function phraseHtml(p){const x=phraseParts(p);return `<span class="phrase"><span class="phrase-en">${esc(x.en)}</span>${x.zh?`<span class="phrase-zh">${esc(x.zh)}</span>`:''}</span>`}
+
+const englishGlosses={
+'Hallucination':'A false or fabricated output generated by an AI model that appears plausible but is not factual.',
+'Fine-tuning':'The process of further training a pre-trained model on specific data or tasks.',
+'RAG / Retrieval Augmented Generation':'An AI approach that retrieves relevant information before generating an answer.',
+'Sequential Thinking':'A reasoning method that breaks a problem into ordered, step-by-step thoughts.',
+'τ scaling law':'A scaling relationship describing how a metric changes with tau or related parameters.',
+'Quantum Tunneling Effect':'A quantum phenomenon where particles pass through a barrier that would be impossible classically.',
+'Conventional Design':'A traditional design method or architecture used before newer alternatives.',
+'2D':'A two-dimensional layout or design, often referring to flat chip structures.',
+'Chiplet':'A small modular chip designed to work with other chiplets in one package.',
+'3D Stacking':'A chip integration technique that stacks components vertically.',
+'transistor':'A semiconductor device used to switch or amplify electrical signals.',
+'semiconductor':'A material whose electrical conductivity lies between a conductor and an insulator.',
+'unveil':'To officially reveal, announce, or present something for the first time.',
+'Escalate':'To increase in intensity or to raise an issue to a higher level of responsibility.',
+'commencement':'The beginning of something; also a graduation ceremony.',
+'well-trodden trope':'A familiar or overused theme, pattern, or storytelling device.',
+'perspective':'A particular way of seeing, thinking about, or interpreting something.',
+'intentional':'Done deliberately, consciously, or with a clear purpose.',
+'approach':'A method, way, or strategy for dealing with a task or problem.',
+'consecutive':'Following one after another without interruption.',
+'coma':'A deep unconscious state from which a person cannot be awakened normally.',
+'paycheck':'Money received as salary or wages, usually on a regular schedule.',
+'omit':'To leave out, exclude, or fail to include something.',
+'claim':'To state something as true; also to demand something as a right or compensation.',
+'sustain':'To maintain, support, or endure something over time.',
+'identical':'Exactly the same in every important way.',
+'professionalism':'The skill, behavior, and standards expected from a professional person.',
+'crucial':'Extremely important or necessary for success.',
+'anxiety':'A feeling of worry, nervousness, or unease about something uncertain.',
+'reverse':'To turn something around, change it to the opposite, or undo a decision.',
+'vacuum':'An empty space with little or no matter; also a device for cleaning by suction.',
+'adjourn':'To pause, postpone, or formally end a meeting or court session.',
+'cream':'A thick dairy product; also a skincare product or the best part of something.',
+'hermit':'A person who lives alone and avoids society.',
+'counselor':'A person who gives guidance, advice, or professional support.',
+'overwhelming':'Very strong, intense, or difficult to resist or deal with.',
+'groom':'To prepare or train someone for a role; also a man getting married.',
+'warrant':'An official legal authorization; also a reason that justifies action.',
+'courtroom':'A room in which legal trials and hearings take place.',
+'courthouse':'A building where courts and legal offices are located.',
+'jury':'A group of people selected to hear evidence and give a verdict in court.',
+'prosecution':'The legal party responsible for bringing a criminal case against someone.',
+'render':'To give, provide, or formally deliver a decision or judgment.',
+'testimony':'A formal statement or evidence given by a witness, especially in court.',
+'plea':'A formal response to a criminal charge; also an urgent request.',
+'OCD / Obsessive-Compulsive Disorder':'A mental health condition involving intrusive thoughts and repetitive behaviors.',
+'Chairman':'The person who leads a company board or formal meeting.',
+'Shareholder':'A person or organization that owns shares in a company.',
+'CEO / Chief Executive Officer':'The highest-ranking executive responsible for overall company management.',
+'COO / Chief Operating Officer':'The executive responsible for daily business operations.',
+'CFO / Chief Financial Officer':'The executive responsible for a company’s financial management.',
+'CTO / Chief Technology Officer':'The executive responsible for technology strategy and development.',
+'CIO / Chief Information Officer':'The executive responsible for information systems and IT strategy.',
+'CMO / Chief Marketing Officer':'The executive responsible for marketing, branding, and growth strategy.',
+'CHRO / Chief Human Resources Officer':'The executive responsible for human resources and talent strategy.',
+'CLO / Chief Legal Officer':'The executive responsible for legal affairs and compliance.',
+'词汇背诵小程序｜知识库词表梳理与开发需求':'A product requirement document for organizing vocabulary data and building a learning app.'
+};
+function primaryCategory(c='未分类'){const raw=String(c||'未分类').trim();const first=raw.split(/\s*[\/／]\s*/)[0].trim();const alias={'AI':'AI','医学':'医学','法律':'法律','商务英语':'商务英语','通用英文词汇':'通用英文词汇','通用':'通用英文词汇','生活':'生活','媒体':'媒体','职场':'职场','项目':'项目'};return alias[first]||first||'未分类'}
+function enrichWord(w){w.category=primaryCategory(w.category);const fallbackEn=w.englishExplanation||w.englishMeaning||w.meaningEn||w.definition||w.en||englishGlosses[w.word]||englishGlosses[w.term]||w.meaning||w.note||'暂无英文解释';w.en=fallbackEn;const data=fallbackExamples[w.word]||fallbackExamples[w.term]; if(data){if(!w.example)w.example=data[0]; if(!w.exampleZh)w.exampleZh=data[1]; if(!w.phrases)w.phrases=data[2];} if(!w.phrases)w.phrases=[w.word+' example',w.word+' usage']; return w}
+words=words.map(enrichWord);
+function speak(text){if(!('speechSynthesis' in window)){alert('当前浏览器不支持语音朗读');return} speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=.86; u.pitch=1; const voices=speechSynthesis.getVoices(); const us=voices.find(v=>/en-US/i.test(v.lang)&&/female|samantha|zira|google/i.test(v.name))||voices.find(v=>/en-US/i.test(v.lang)); if(us)u.voice=us; speechSynthesis.speak(u)}
+function loadWords(){try{return JSON.parse(localStorage.getItem(STORAGE_WORDS))||starterWords}catch{return starterWords}}
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STORAGE_PROGRESS))||{}}catch{return {}}}
+function saveWords(){localStorage.setItem(STORAGE_WORDS,JSON.stringify(words))} function saveProgress(){localStorage.setItem(STORAGE_PROGRESS,JSON.stringify(progress))}
+function esc(s=''){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function reg(s=''){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function key(w){return w.id||w.word} function meta(w){return progress[key(w)]||{known:false,favorite:false,score:0,seen:0}}
+function diffOf(w){const raw=w.difficulty||w.level||'初级';const map={easy:'初级',medium:'中级',hard:'高级','基础':'初级','进阶':'中级'};return map[raw]||raw}
+function statusOf(w){const m=meta(w);if(m.status)return m.status;if(m.known)return '已掌握';if((m.seen||0)>0)return '学习中';const raw=w.status||'未学习';const map={new:'未学习',learning:'学习中',mastered:'已掌握',review:'需复习'};return map[raw]||raw}
+function cats(){return ['all',...Array.from(new Set(words.map(w=>w.category||'未分类'))).sort()]}
+function filtered(){const q=state.query.trim().toLowerCase();return words.filter(w=>{const m=meta(w),blob=[w.word,w.term,w.meaning,w.phonetic,w.zh,w.en,w.example,w.exampleZh,w.category,w.level,w.note,w.sourceUrl].join(' ').toLowerCase();if(state.category!=='all'&&(w.category||'未分类')!==state.category)return false;if(state.level!=='all'&&diffOf(w)!==state.level)return false;if(state.learningStatus==='favorite'&&!m.favorite)return false;if(state.learningStatus!=='all'&&state.learningStatus!=='favorite'&&statusOf(w)!==state.learningStatus)return false;return !q||blob.includes(q)})}
+function clamp(list){state.index=list.length?Math.max(0,Math.min(state.index,list.length-1)):0}
+function stats(){const known=words.filter(w=>meta(w).known).length,fav=words.filter(w=>meta(w).favorite).length;$('statTotal').textContent=words.length;$('statKnown').textContent=known;$('statFav').textContent=fav;$('statRate').textContent=words.length?Math.round(known/words.length*100)+'%':'0%'}
+function filters(){const cs=cats();$('categoryList').innerHTML=cs.map(c=>{const n=c==='all'?words.length:words.filter(w=>(w.category||'未分类')===c).length;return `<button class="cat ${state.category===c?'active':''}" data-cat="${esc(c)}"><span>${c==='all'?'全部':esc(c)}</span><span>${n}</span></button>`}).join('')}
+function render(){stage.classList.remove('filter-pulse');void stage.offsetWidth;stage.classList.add('filter-pulse');stats();filters();const list=filtered();clamp(list);if(!list.length){stage.innerHTML='<div class="study empty">没有匹配的词条。可以调整筛选，或导入新的 JSON 词库。</div>';return} if(state.mode==='card')card(list); if(state.mode==='quiz')quiz(list); if(state.mode==='cloze')cloze(list); if(state.mode==='list')listView(list)}
+function seen(w){const k=key(w);progress[k]=progress[k]||{known:false,favorite:false,score:0,seen:0};progress[k].seen=(progress[k].seen||0)+1;if(!progress[k].status&&!progress[k].known)progress[k].status='学习中';saveProgress()}
+function hi(text,word){if(!text)return '暂无例句';return esc(text).replace(new RegExp('('+reg(esc(word))+')','ig'),'<mark>$1</mark>')}
+function card(list){const w=list[state.index],m=meta(w),pct=Math.round((state.index+1)/list.length*100);stage.innerHTML=`<article class="study fade-in"><div class="bar"><i style="width:${pct}%"></i></div><div style="color:var(--muted);margin-bottom:18px">${state.index+1} / ${list.length}</div><div class="top"><div><h2 class="word word-pop">${esc(w.word)}</h2><button class="btn speak" data-speak="${esc(w.word)}">🔊 美音朗读</button>${w.phonetic?`<div class="phon">${esc(w.phonetic)}</div>`:''}<div class="badges"><span class="badge">${esc(w.category||'未分类')}</span><span class="badge">${esc(diffOf(w))}</span><span class="badge">${esc(statusOf(w))}</span>${m.favorite?'<span class="badge">★ 收藏</span>':''}</div></div><div class="master"><b>${m.known?'已掌握':'待复习'}</b><span>本地进度</span></div></div><div class="grid2"><div class="meaning"><label>中文释义</label><div>${esc(w.zh||'—')}</div></div><div class="meaning"><label>English</label><div>${esc(w.en||'—')}</div></div></div>${w.phrases?`<div class="phrase-box"><label>常用词组 / 搭配</label><div class="phrases">${w.phrases.map(phraseHtml).join('')}</div></div>`:''}<div class="example"><div class="example-head"><strong>例句</strong>${w.example?`<button class="btn speak-example" data-speak="${esc(w.example)}">🔊 听例句</button>`:''}</div><p>${hi(w.example||'',w.word)}</p><small>${esc(w.exampleZh||'')}</small></div>${w.note?`<div class="note">记忆提示：${esc(w.note)}</div>`:''}${w.sourceUrl?`<div class="row" style="margin-top:14px"><a class="btn" href="${esc(w.sourceUrl)}" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex">查看来源</a></div>`:''}<div class="nav"><div class="row"><button class="btn" data-action="prev">上一词</button><button class="btn primary" data-action="next">下一词</button></div><div class="row"><button class="btn" data-action="favorite">${m.favorite?'取消收藏':'收藏'}</button><button class="btn" data-action="known">${m.known?'标为待复习':'标为已掌握'}</button></div></div></article>`;seen(w)}
+function makeChoices(list,w){const pool=list.filter(x=>x.word!==w.word).map(x=>x.zh||x.en||x.word).sort(()=>Math.random()-.5).slice(0,3);return [w.zh||w.en||w.word,...pool].sort(()=>Math.random()-.5)}
+function quiz(list){const w=list[state.index],choices=makeChoices(list,w);stage.innerHTML=`<article class="quiz fade-in"><h2>选择题</h2><div class="badges"><span class="badge">${state.index+1} / ${list.length}</span><span class="badge">${esc(w.category||'未分类')}</span></div><h3 class="word word-pop" style="font-size:clamp(38px,7vw,72px);margin-top:18px">${esc(w.word)}</h3><button class="btn speak" data-speak="${esc(w.word)}">🔊 美音朗读</button>${w.phonetic?`<div class="phon">${esc(w.phonetic)}</div>`:''}<p class="sub" style="margin-top:14px">请选择最贴近的中文释义。</p><div class="choices">${choices.map(c=>`<button class="choice" data-choice="${esc(c)}">${esc(c)}</button>`).join('')}</div><div id="feedback" class="note" style="display:none;margin-top:18px"></div><div class="nav"><button class="btn" data-action="prev">上一题</button><button class="btn primary" data-action="next">下一题</button></div></article>`;seen(w)}
+function cloze(list){const w=list[state.index],blank=(w.example||'').replace(new RegExp(reg(w.word),'ig'),'_____');stage.innerHTML=`<article class="quiz fade-in"><h2>例句填空</h2><div class="badges"><span class="badge">${state.index+1} / ${list.length}</span><span class="badge">${esc(w.zh||'')}</span></div><div class="example"><div class="example-head"><strong>例句填空</strong>${w.example?`<button class="btn speak-example" data-speak="${esc(w.example)}">🔊 听例句</button>`:''}</div><p>${esc(blank||'暂无例句')}</p><small>${esc(w.exampleZh||'')}</small></div>${w.phrases?`<div class="phrase-box"><label>提示词组</label><div class="phrases">${w.phrases.map(phraseHtml).join('')}</div></div>`:''}<input class="cloze" id="clozeInput" placeholder="输入缺失的单词或短语" autocomplete="off"><div id="feedback" class="note" style="display:none;margin-top:18px"></div><div class="nav"><button class="btn" data-action="checkCloze">检查</button><div class="row"><button class="btn" data-action="prev">上一题</button><button class="btn primary" data-action="next">下一题</button></div></div></article>`;seen(w)}
+function listView(list){stage.innerHTML=`<article class="study fade-in"><h2>词条清单</h2><div style="display:grid;gap:10px">${list.map((w,i)=>{const m=meta(w);return `<button class="cat" data-jump="${i}" style="align-items:center"><span><strong>${esc(w.word)}</strong><br><small style="color:var(--muted)">${esc(w.zh||'')} · ${esc(w.category||'未分类')}</small></span><span>${m.known?'✓':m.favorite?'★':'›'}</span></button>`}).join('')}</div></article>`}
+function move(n){const list=filtered();if(!list.length)return;state.index=(state.index+n+list.length)%list.length;render()}
+function toggle(prop){const list=filtered(),w=list[state.index];if(!w)return;const k=key(w);progress[k]=progress[k]||{known:false,favorite:false,score:0,seen:0};progress[k][prop]=!progress[k][prop];if(prop==='known')progress[k].status=progress[k].known?'已掌握':'需复习';saveProgress();render()}
+function answer(choice,btn){const list=filtered(),w=list[state.index],right=w.zh||w.en||w.word,ok=choice===right;document.querySelectorAll('.choice').forEach(b=>{b.disabled=true;if(b.dataset.choice===right)b.classList.add('correct');else if(b===btn)b.classList.add('wrong')});const f=$('feedback');f.style.display='block';f.innerHTML=ok?'答对了。<br>'+esc(w.example||''):'再看一眼：正确释义是 <strong>'+esc(right)+'</strong><br>'+esc(w.example||'');const k=key(w);progress[k]=progress[k]||{known:false,favorite:false,score:0,seen:0};progress[k].score=(progress[k].score||0)+(ok?1:0);if(ok){progress[k].known=true;progress[k].status='已掌握'}saveProgress();stats()}
+function checkCloze(){const list=filtered(),w=list[state.index],v=($('clozeInput')?.value||'').trim().toLowerCase(),ok=v===String(w.word).trim().toLowerCase(),f=$('feedback');f.style.display='block';f.innerHTML=ok?'答对了。':'答案是 <strong>'+esc(w.word)+'</strong><br>'+esc(w.example||'');if(ok){const k=key(w);progress[k]=progress[k]||{known:false,favorite:false,score:0,seen:0};progress[k].known=true;progress[k].status='已掌握';progress[k].score=(progress[k].score||0)+1;saveProgress();stats()}}
+document.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.speak){speak(t.dataset.speak);t.classList.add('flash');setTimeout(()=>t.classList.remove('flash'),600);return} if(t.dataset.mode){state.mode=t.dataset.mode;state.index=0;document.querySelectorAll('.mode').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.mode));render()} if(t.dataset.cat){state.category=t.dataset.cat;state.index=0;t.closest('.chips')?.classList.add('chip-switch');render()} if(t.dataset.difficulty){state.level=t.dataset.difficulty;state.index=0;t.closest('.chips')?.classList.add('chip-switch');render()} if(t.dataset.learningStatus){state.learningStatus=t.dataset.learningStatus;state.index=0;t.closest('.chips')?.classList.add('chip-switch');render()} if(t.dataset.jump){state.mode='card';state.index=Number(t.dataset.jump);document.querySelectorAll('.mode').forEach(b=>b.classList.toggle('active',b.dataset.mode==='card'));render()} if(t.dataset.action==='prev')move(-1); if(t.dataset.action==='next')move(1); if(t.dataset.action==='favorite')toggle('favorite'); if(t.dataset.action==='known')toggle('known'); if(t.dataset.action==='checkCloze')checkCloze(); if(t.dataset.choice)answer(t.dataset.choice,t)});
+$('searchInput').addEventListener('input',e=>{state.query=e.target.value;state.index=0;render()});
+$('importBtn').addEventListener('click',()=>{try{const data=JSON.parse($('importText').value);if(!Array.isArray(data))throw new Error('JSON 必须是数组');let added=0,updated=0,skipped=0;const mapDiff=v=>({easy:'初级',medium:'中级',hard:'高级','基础':'初级','进阶':'中级'}[v]||v||'初级');const mapStatus=v=>({new:'未学习',learning:'学习中',mastered:'已掌握',review:'需复习'}[v]||v||'未学习');const normalize=(w,i)=>{const term=w.term||w.word;if(!term||!(w.meaning||w.zh||w.cn))return null;let phrases=w.phrases||w.collocations||[];if(typeof phrases==='string')phrases=phrases.split(/[、,;]/).map(x=>x.trim()).filter(Boolean);const firstExample=Array.isArray(w.examples)&&w.examples.length?w.examples[0]:null;const example=w.example||(firstExample&&(firstExample.en||firstExample.example))||'';const exampleZh=w.exampleZh||w.example_cn||(firstExample&&(firstExample.zh||firstExample.cn))||'';const difficulty=mapDiff(w.difficulty||w.level);const status=mapStatus(w.status);return enrichWord({id:String(w.id||words.length+i+1).padStart(3,'0'),term,word:term,meaning:w.meaning||w.zh||w.cn,phonetic:w.phonetic||'',zh:w.meaning||w.zh||w.cn,en:w.englishExplanation||w.definition||w.meaningEn||w.englishMeaning||w.en||'',example,exampleZh,examples:w.examples||[],phrases,category:primaryCategory(w.category||'未分类'),sourceUrl:w.sourceUrl||'',difficulty,level:difficulty,status,note:w.note||''})};data.forEach((raw,i)=>{const w=normalize(raw,i);if(!w){skipped++;return}const idx=words.findIndex(x=>(w.id&&x.id===w.id)||String(x.word||x.term).toLowerCase()===String(w.word).toLowerCase());if(idx>=0){words[idx]={...words[idx],...w};updated++}else{words.push(w);added++}});saveWords();state.category='all';state.level='all';state.learningStatus='all';state.index=0;render();alert(`导入完成：新增 ${added} 条，更新 ${updated} 条，跳过 ${skipped} 条。`)}catch(err){alert('导入失败：'+err.message)}});
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(words,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vocabulary.json';a.click();URL.revokeObjectURL(a.href)});
+$('resetBtn').addEventListener('click',()=>{if(confirm('确认清空本地学习进度？')){progress={};saveProgress();render()}});
+
+const quotes=[
+  ['Learning never exhausts the mind.','Leonardo da Vinci'],
+  ['Live as if you were to die tomorrow. Learn as if you were to live forever.','Mahatma Gandhi'],
+  ['The beautiful thing about learning is that nobody can take it away from you.','B. B. King'],
+  ['Education is the most powerful weapon which you can use to change the world.','Nelson Mandela'],
+  ['An investment in knowledge pays the best interest.','Benjamin Franklin'],
+  ['Tell me and I forget. Teach me and I remember. Involve me and I learn.','Benjamin Franklin'],
+  ['The limits of my language mean the limits of my world.','Ludwig Wittgenstein'],
+  ['A different language is a different vision of life.','Federico Fellini']
+];
+let quoteIndex=0;
+function rotateQuote(){const qt=$('quoteText'),qa=$('quoteAuthor');if(!qt||!qa)return;quoteIndex=(quoteIndex+1)%quotes.length;qt.classList.remove('quote-fade');qa.classList.remove('quote-fade');void qt.offsetWidth;qt.textContent=quotes[quoteIndex][0];qa.textContent='— '+quotes[quoteIndex][1];qt.classList.add('quote-fade');qa.classList.add('quote-fade')}
+setInterval(rotateQuote,60000);
+render();
+</script>
+</body>
+</html>
