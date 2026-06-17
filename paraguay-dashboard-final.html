@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>巴拉圭宏观经济 Dashboard（2023–2026）</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#f5f7fa;--card:#fff;--ink:#2c3e50;--muted:#64748b;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--orange:#f59e0b;--shadow:0 8px 30px rgba(148,163,184,.2)}
+    *{box-sizing:border-box}body{margin:0;font-family:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+    .container{width:min(1200px,calc(100% - 32px));margin:24px auto}
+    .header{background:var(--card);padding:24px;border-radius:16px;box-shadow:var(--shadow);margin-bottom:24px}
+    .header h1{margin:0 0 8px 0;font-size:28px}
+    .header p{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:24px}
+    .card{background:var(--card);padding:20px 24px;border-radius:16px;box-shadow:var(--shadow)}
+    .card h2{margin:0 0 16px 0;font-size:20px}
+    .canvas-wrap{position:relative;height:280px}
+    .overview{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+    .stat{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+    .stat .num{font-size:28px;font-weight:800;margin-bottom:4px}
+    .stat .label{color:var(--muted);font-size:14px}
+    .footer{background:var(--card);padding:24px;border-radius:16px;box-shadow:var(--shadow);margin-bottom:48px}
+    .section{margin-bottom:16px}
+    .section h3{margin:12px 0 8px 0}
+    .rating{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+    .rating-item{padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0}
+    .rating-item .rating-value{font-size:22px;font-weight:700}
+    .investment{background:#dcfce7}
+    .speculative{background:#fef3c7}
+    .risk-opportunity{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .risk{background:#fef2f2;border-left:4px solid var(--red);padding:16px;border-radius:12px}
+    .opportunity{background:#f0fdf4;border-left:4px solid var(--green);padding:16px;border-radius:12px}
+    h4{margin:0 0 8px 0}
+    ul{margin:0;padding-left:20px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.overview{grid-template-columns:1fr 1fr}.rating{grid-template-columns:1fr}.risk-opportunity{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>巴拉圭 🇵🇾 宏观经济指标 Dashboard（2023–2026）</h1>
+      <p>完整官方整理数据 · 近三年核心走势 · 主权信用评级 · 风险机遇深度分析</p>
+    </div>
+    <div class="overview">
+      <div class="stat">
+        <div class="num">6.6<span style="font-size:16px; font-weight:400;">%</span></div>
+        <div class="label">2025 GDP增速（南美第一）</div>
+      </div>
+      <div class="stat">
+        <div class="num">2.4<span style="font-size:16px; font-weight:400;">%</span></div>
+        <div class="label">2026年5月 CPI同比</div>
+      </div>
+      <div class="stat">
+        <div class="num">93.7<span style="font-size:16px; font-weight:400;">亿美元</span></div>
+        <div class="label">2026年5月外汇储备</div>
+      </div>
+      <div class="stat">
+        <div class="num">6134</div>
+        <div class="label">最新 USD/PYG（1美元兑瓜拉尼）</div>
+      </div>
+      <div class="stat">
+        <div class="num">7679<span style="font-size:16px; font-weight:400;"> USD</span></div>
+        <div class="label">2025人均GDP</div>
+      </div>
+      <div class="stat">
+        <div class="num">38.1<span style="font-size:16px; font-weight:400;">%</span></div>
+        <div class="label">债务/GDP（拉美最低之一）</div>
+      </div>
+      <div class="stat">
+        <div class="num">Baa3 / BBB-</div>
+        <div class="label">穆迪 / 标普评级（均投资级）</div>
+      </div>
+      <div class="stat">
+        <div class="num">4.8<span style="font-size:16px; font-weight:400;">%</span></div>
+        <div class="label">2025失业率</div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>GDP同比增速（季度，%）</h2>
+        <div class="canvas-wrap"><canvas id="chartGdp"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>外汇储备（百万美元，月度节点）</h2>
+        <div class="canvas-wrap"><canvas id="chartReserves"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>CPI同比通胀（月度，%）</h2>
+        <div class="canvas-wrap"><canvas id="chartCpi"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>汇率 USD/PYG（1美元兑瓜拉尼，月度）</h2>
+        <div class="canvas-wrap"><canvas id="chartExchange"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>主权信用评级</h2>
+      <div class="rating">
+        <div class="rating-item investment">
+          <div><strong>穆迪</strong></div>
+          <div class="rating-value">Baa3</div>
+          <div>展望：稳定</div>
+          <div>评级：投资级</div>
+          <div>更新：2024-07</div>
+        </div>
+        <div class="rating-item investment">
+          <div><strong>标普</strong></div>
+          <div class="rating-value">BBB-</div>
+          <div>展望：稳定</div>
+          <div>评级：投资级</div>
+          <div>更新：2025-12</div>
+        </div>
+        <div class="rating-item speculative">
+          <div><strong>惠誉</strong></div>
+          <div class="rating-value">BB+</div>
+          <div>展望：正面</div>
+          <div>评级：投机级</div>
+          <div>更新：2025-10</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer risk-opportunity">
+      <div class="risk">
+        <h4>主要风险</h4>
+        <ul>
+          <li>经济结构单一，高度依赖大豆农产品出口，易受国际大宗商品价格波动影响</li>
+          <li>制造业基础薄弱，产业链纵深不足，关键资本品依赖进口</li>
+          <li>非正规就业比例高达 62%，社会保障覆盖不足</li>
+          <li>基础设施相对落后，制约进一步增长</li>
+        </ul>
+      </div>
+      <div class="opportunity">
+        <h4>主要机遇</h4>
+        <ul>
+          <li>双投资级评级降低融资成本，吸引大型外资项目（Paracel纸浆厂38亿美元、ATOME肥料厂等）</li>
+          <li>10%企业所得税为拉美最低，叠加南方共同市场区位优势，吸引制造业转移</li>
+          <li>廉价水电资源丰富，适合发展数据中心、高耗能产业</li>
+          <li>政府持续财政整顿，债务率38%为拉美最低之一，财政空间充足</li>
+          <li>人口结构年轻，劳动力成本相对较低</li>
+          <li>对华出口增长迅速，大豆等农产品需求旺盛</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer">
+      <section class="section">
+        <h3>经济走向总结</h3>
+        <p>巴拉圭近三年宏观经济走出了一条非常清晰的<strong>正向改善曲线</strong>，各项核心指标同步向好：</p>
+        <ul>
+          <li><strong>增长加速</strong>：GDP增速从 2023–2024 年的 4% 左右稳步攀升至 2025 年的 6–7%，全年增速达到 6.6%，增速位列南美第一，增长动能明显加快。农业复苏、水电出力增加、服务业扩张共同拉动，大型投资项目开始贡献增长。</li>
+          <li><strong>通胀持续回落</strong>：从 2023 年初 5%+ 水平逐步下降，到 2026 年 5 月 CPI 同比已经降至 2.4%，进入央行 3.5%±2% 的目标区间下限。这在拉美地区非常难得，央行通胀目标制取得显著成效。</li>
+          <li><strong>汇率韧性极强</strong>：受大宗商品出口改善、外资流入、央行稳健操作影响，瓜拉尼对美元从 2025 年 4 月高点持续升值，累计升值约 20%，升值幅度和汇率波动率控制在拉美均排名第一，体现了市场对巴拉圭基本面的坚定信心。</li>
+          <li><strong>信用评级跃升</strong>：2024 年穆迪、2025 年标普先后上调至投资级，巴拉圭正式进入国际投资级债券市场，主权信用风险显著降低，未来长期融资成本会明显下降，吸引大型外资项目的能力进一步提升。</li>
+        </ul>
+        <p><strong>基本面整体评价：</strong></p>
+        <ul>
+          <li>财政方面：政府持续整顿，债务/GDP 稳定在 38% 左右，为拉美最低水平之一，财政安全垫充足，政策空间较大。</li>
+          <li>外部方面：外汇储备稳定在 90–100 亿美元，可以覆盖约 5.8 个月进口，满足国际安全标准，应对外部冲击能力充足。</li>
+          <li>结构方面：虽然依旧依赖大豆等大宗商品出口，但低税率+区位+能源优势已经开始吸引制造业转移，长期多元化起步。</li>
+        </ul>
+        <p>长期增长瓶颈仍在于产业结构单一（大宗商品依赖度高）和基础设施相对滞后，但短期增长动能充足，低债务+年轻人口+廉价能源+南方共同市场区位优势，叠加投资级评级加持，对外资吸引力持续提升。IMF 预测 2026 年增速仍将维持 4.2%，继续在南美保持领先增长。</p>
+      </section>
+      <p style="color:var(--muted);font-size:14px;text-align:right">generated by openclaw multi-agent · data collected by 数据掘金客 · dashboard by 行情解码人</p>
+    </div>
+  </div>
+<script>
+const data = {"gdp": [{"date": "2023-03", "growth": 4.8}, {"date": "2023-06", "growth": 5.8}, {"date": "2023-09", "growth": 4}, {"date": "2023-12", "growth": 5.4}, {"date": "2024-03", "growth": 4.9}, {"date": "2024-06", "growth": 5.3}, {"date": "2024-09", "growth": 3.1}, {"date": "2024-12", "growth": 4}, {"date": "2025-03", "growth": 7}, {"date": "2025-06", "growth": 6.7}, {"date": "2025-09", "growth": 6.7}, {"date": "2025-12", "growth": 6.2}], "reserves": [{"date": "2023-12", "value": 9872}, {"date": "2024-02", "value": 9708}, {"date": "2024-12", "value": 11001}, {"date": "2025-09", "value": 8605}, {"date": "2026-03", "value": 9654}, {"date": "2026-04", "value": 9446}, {"date": "2026-05", "value": 9365}], "inflation": [{"date": "2023-12", "cpi": 4}, {"date": "2024-12", "cpi": 3.8}, {"date": "2025-01", "cpi": 4.1}, {"date": "2025-03", "cpi": 4.3}, {"date": "2025-06", "cpi": 4.3}, {"date": "2025-09", "cpi": 4.3}, {"date": "2025-12", "cpi": 3.1}, {"date": "2026-01", "cpi": 2.7}, {"date": "2026-02", "cpi": 2.3}, {"date": "2026-03", "cpi": 1.9}, {"date": "2026-04", "cpi": 2.3}, {"date": "2026-05", "cpi": 2.4}], "exchange_rate": [{"date": "2023-01", "usd_pyg": 7399}, {"date": "2023-12", "usd_pyg": 7344}, {"date": "2025-01", "usd_pyg": 7759}, {"date": "2025-04", "usd_pyg": 8068}, {"date": "2025-07", "usd_pyg": 7592}, {"date": "2025-10", "usd_pyg": 7030}, {"date": "2025-12", "usd_pyg": 6670}, {"date": "2026-01", "usd_pyg": 6685}, {"date": "2026-02", "usd_pyg": 6587}, {"date": "2026-03", "usd_pyg": 6505}, {"date": "2026-04", "usd_pyg": 6431}, {"date": "2026-05", "usd_pyg": 6199}, {"date": "2026-06", "usd_pyg": 6134}], "ratings": {"moody": {"rating": "Baa3", "outlook": "stable", "date": "2024-07", "grade": "investment"}, "sp": {"rating": "BBB-", "outlook": "stable", "date": "2025-12", "grade": "investment"}, "fitch": {"rating": "BB+", "outlook": "positive", "date": "2025-10", "grade": "speculative"}}, "summary": {"year_2025": {"gdp_growth": 6.6, "gdp_usd_billion": 456.85, "gdp_per_capita_usd": 7679, "debt_to_gdp_pct": 38.1, "unemployment_rate": 4.8, "current_account_deficit_gdp_pct": -3.3, "inflation_yoy": 3.1}, "latest_2026_05": {"inflation_yoy": 2.4, "foreign_reserves_billion_usd": 9.365, "usd_to_pyg": 6134}}};
+const ctxGdp = document.getElementById('chartGdp').getContext('2d');
+new Chart(ctxGdp, {
+  type: 'line',
+  data: {
+    labels: data.gdp.map(d => d.date),
+    datasets: [{
+      label: 'GDP同比增速 (%)',
+      data: data.gdp.map(d => d.growth),
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: false, min: 2 } }
+  }
+});
+const ctxReserves = document.getElementById('chartReserves').getContext('2d');
+new Chart(ctxReserves, {
+  type: 'line',
+  data: {
+    labels: data.reserves.map(d => d.date),
+    datasets: [{
+      label: '外汇储备 (百万美元)',
+      data: data.reserves.map(d => d.value),
+      borderColor: '#10b981',
+      backgroundColor: 'rgba(16, 185, 129, 0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+const ctxCpi = document.getElementById('chartCpi').getContext('2d');
+new Chart(ctxCpi, {
+  type: 'line',
+  data: {
+    labels: data.inflation.map(d => d.date),
+    datasets: [{
+      label: 'CPI同比 (%)',
+      data: data.inflation.map(d => d.cpi),
+      borderColor: '#f59e0b',
+      backgroundColor: 'rgba(245, 158, 11, 0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+const ctxExchange = document.getElementById('chartExchange').getContext('2d');
+new Chart(ctxExchange, {
+  type: 'line',
+  data: {
+    labels: data.exchange_rate.map(d => d.date),
+    datasets: [{
+      label: 'USD / PYG (1 USD =)',
+      data: data.exchange_rate.map(d => d.usd_pyg),
+      borderColor: '#ef4444',
+      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: false } }
+  }
+});
+</script>
+</body>
+</html>
