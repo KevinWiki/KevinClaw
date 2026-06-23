@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQQ 慧定投·终极避坑版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;800&display=swap');
+        body { background-color: #050505; color: #d1d5db; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .panel { background: #0f1115; border: 1px solid #1f2937; border-radius: 1rem; }
+        .advice-card { background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); }
+        input { background: #1a1d23 !important; border: 1px solid #374151 !important; color: #60a5fa !important; border-radius: 0.5rem; padding: 0.5rem; font-family: 'JetBrains Mono'; outline: none; }
+        .active-tab { background: #3b82f6 !important; color: white !important; border-color: #3b82f6 !important; }
+        .hidden { display: none; }
+        .sync-loading { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body class="p-4 lg:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-gray-800 gap-4">
+            <div>
+                <h1 class="text-2xl font-black text-white flex items-center gap-2 italic">
+                    <span class="text-blue-500">QQQ</span> SMART DCA
+                </h1>
+                <p class="text-[10px] text-gray-500 mono uppercase tracking-widest mt-1">
+                    状态: <span id="sync-status" class="text-yellow-500">正在初始化行情...</span>
+                </p>
+            </div>
+
+            <!-- 核心：官方原生行情 (这个永远不会同步失败) -->
+            <div class="flex items-center gap-4 bg-gray-900/50 p-2 rounded-lg border border-gray-800">
+                <span class="text-[10px] font-bold text-gray-500 mono uppercase ml-2">实时精准价:</span>
+                <div class="tradingview-widget-container" style="width: 150px; height: 35px;">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+                    { "symbol": "NASDAQ:QQQ", "width": "100%", "colorTheme": "dark", "isTransparent": true, "locale": "zh_CN" }
+                    </script>
+                </div>
+            </div>
+
+            <!-- 模式切换 -->
+            <div class="flex bg-gray-900 p-1 rounded-xl border border-gray-800">
+                <button id="mode-cash" onclick="switchMode('cash')" class="px-4 py-2 rounded-lg text-xs font-bold active-tab transition-all">按金额定投</button>
+                <button id="mode-qty" onclick="switchMode('qty')" class="px-4 py-2 rounded-lg text-xs font-bold text-gray-500 transition-all">按股数定投</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Left Content -->
+            <div class="lg:col-span-3 space-y-6">
+                
+                <!-- Main Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Price Card -->
+                    <div class="panel p-6 cursor-pointer hover:bg-gray-800/50 transition-all" onclick="manualPriceFix()">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">计算参考价 (点击手动修正)</p>
+                        <div id="price-display" class="text-5xl font-black mono tracking-tighter text-white italic">0.00</div>
+                        <div id="countdown-bar" class="w-full bg-gray-800 h-1 mt-4 rounded-full overflow-hidden">
+                            <div id="timer-progress" class="bg-blue-600 h-full w-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Advice Card -->
+                    <div class="panel p-6 advice-card border-none text-white shadow-xl relative">
+                        <p id="advice-title" class="text-blue-100 text-[10px] font-bold uppercase mb-2 italic">建议投入金额</p>
+                        <div class="flex items-baseline gap-1">
+                            <span id="main-val" class="text-4xl font-black tracking-tighter">0.00</span>
+                            <span id="main-unit" class="text-sm font-bold opacity-70 italic">USD</span>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-white/10 text-xs font-bold text-blue-200">
+                            换算: <span id="sub-val" class="mono">0.00</span> <span id="sub-unit">股</span>
+                        </div>
+                        <div id="mult-label" class="absolute top-4 right-4 bg-black/30 px-2 py-0.5 rounded text-[10px] font-black">1.00x</div>
+                    </div>
+
+                    <!-- Portfolio -->
+                    <div class="panel p-6">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">当前持仓市值</p>
+                        <div id="total-val" class="text-3xl font-black mono text-emerald-500">$ 0.00</div>
+                        <div id="hold-status" class="text-[10px] text-gray-500 mt-2 font-bold uppercase">Holding: 0 Shares</div>
+                    </div>
+                </div>
+
+                <!-- MA & Deviation -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="panel p-5 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-500 mb-1">MA250 年线参考</p>
+                            <p id="ma-display" class="text-xl font-bold mono text-gray-200">$ 0.00</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold text-gray-500 mb-1">当前偏离度</p>
+                            <p id="dev-display" class="text-xl font-bold mono text-blue-500">0.00%</p>
+                        </div>
+                    </div>
+                    <div class="panel p-5 flex flex-col justify-center">
+                        <div class="flex justify-between text-[10px] font-bold mb-2">
+                            <span class="text-gray-500">估值水位</span>
+                            <span id="strategy-msg" class="text-blue-500 italic">正在计算...</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                            <div id="dev-bar" class="h-full bg-blue-500 transition-all duration-1000" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Large Chart -->
+                <div class="panel h-[400px] overflow-hidden">
+                    <div id="tv_chart_main" class="h-full w-full"></div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="panel p-6">
+                    <h3 class="text-xs font-black uppercase text-gray-400 border-b border-gray-800 pb-4 mb-6 tracking-widest">参数配置</h3>
+                    <div class="space-y-6">
+                        <div id="cash-input-group">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase block mb-2 tracking-widest">基础定投金额 ($)</label>
+                            <input type="number" id="base-amt" value="500" class="w-full">
+                        </div>
+                        <div id="qty-input-group" class="hidden">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase block mb-2 tracking-widest">基础定投股数 (Qty)</label>
+                            <input type="number" id="base-qty" value="1" step="0.1" class="w-full">
+                        </div>
+                        <div class="pt-4 border-t border-gray-800">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase block mb-2 tracking-widest">当前总持仓 (股)</label>
+                            <input type="number" id="hold-qty" value="10" class="w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center text-[10px] font-bold mb-2 uppercase">
+                                <span class="text-gray-500">激进系数</span>
+                                <span id="risk-val" class="text-blue-500 mono">2.0</span>
+                            </div>
+                            <input type="range" id="risk-level" min="1" max="5" step="0.5" value="2" class="w-full h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                        </div>
+                    </div>
+                    <button onclick="forceSync()" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">立即强制同步价格</button>
+                </div>
+                
+                <div class="panel p-4 bg-blue-900/10 border-blue-900/30">
+                    <p class="text-[10px] text-gray-500 leading-relaxed italic mono uppercase">
+                        注意：如自动同步失败，请看右上方行情数字，点击左侧“参考价”手动输入，慧定投计算将实时更新。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        // 全局状态
+        let state = {
+            price: 0,
+            ma250: 0,
+            mode: 'cash',
+            timer: 30
+        };
+
+        // 初始化 TradingView
+        new TradingView.widget({
+            "autosize": true, "symbol": "NASDAQ:QQQ", "interval": "1", "timezone": "Etc/UTC",
+            "theme": "dark", "style": "2", "locale": "zh_CN", "container_id": "tv_chart_main", "hide_top_toolbar": true
+        });
+
+        // 切换模式
+        function switchMode(m) {
+            state.mode = m;
+            document.getElementById('mode-cash').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${m === 'cash' ? 'active-tab' : 'text-gray-500'}`;
+            document.getElementById('mode-qty').className = `px-4 py-2 rounded-lg text-xs font-bold transition-all ${m === 'qty' ? 'active-tab' : 'text-gray-500'}`;
+            document.getElementById('cash-input-group').classList.toggle('hidden', m !== 'cash');
+            document.getElementById('qty-input-group').classList.toggle('hidden', m !== 'qty');
+            
+            document.getElementById('advice-title').innerText = m === 'cash' ? '建议投入金额' : '建议买入股数';
+            document.getElementById('main-unit').innerText = m === 'cash' ? 'USD' : '股';
+            document.getElementById('sub-unit').innerText = m === 'cash' ? '股' : 'USD';
+            updateUI();
+        }
+
+        // 手动校准
+        function manualPriceFix() {
+            const val = prompt("请输入当前 QQQ 实时价格（参考右上方数字）:");
+            if(val && !isNaN(val)) {
+                state.price = parseFloat(val);
+                updateUI();
+            }
+        }
+
+        // 核心同步函数
+        async function forceSync() {
+            const status = document.getElementById('sync-status');
+            status.innerText = "正在尝试同步...";
+            status.className = "text-blue-500 sync-loading mono uppercase font-bold";
+
+            // 备用代理列表
+            const proxies = [
+                url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+                url => `https://corsproxy.io/?${encodeURIComponent(url)}`
+            ];
+
+            const apiUrl = `https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval=1m&range=1d`;
+
+            for (let proxy of proxies) {
+                try {
+                    const res = await fetch(proxy(apiUrl));
+                    const json = await res.json();
+                    const data = JSON.parse(json.contents || json);
+                    const meta = data.chart.result[0].meta;
+                    
+                    state.price = meta.regularMarketPrice;
+                    
+                    if(state.ma250 === 0) {
+                        const maUrl = `https://query1.finance.yahoo.com/v8/finance/chart/QQQ?interval=1d&range=1y`;
+                        const res2 = await fetch(proxy(maUrl));
+                        const json2 = await res2.json();
+                        const data2 = JSON.parse(json2.contents || json2);
+                        const closes = data2.chart.result[0].indicators.quote[0].close.filter(c => c != null);
+                        state.ma250 = closes.reduce((a,b) => a+b, 0) / closes.length;
+                    }
+
+                    status.innerText = "同步成功: " + new Date().toLocaleTimeString();
+                    status.className = "text-emerald-500 mono uppercase font-bold";
+                    updateUI();
+                    return; // 成功后退出循环
+                } catch (e) {
+                    console.log("代理尝试失败，切换中...");
+                }
+            }
+            
+            status.innerText = "自动同步失败，请点击价格手动修正";
+            status.className = "text-rose-500 mono uppercase font-bold";
+        }
+
+        // UI 渲染引擎
+        function updateUI() {
+            if (state.price === 0) return;
+
+            const bAmt = parseFloat(document.getElementById('base-amt').value) || 0;
+            const bQty = parseFloat(document.getElementById('base-qty').value) || 0;
+            const holdQty = parseFloat(document.getElementById('hold-qty').value) || 0;
+            const risk = parseFloat(document.getElementById('risk-level').value) || 2;
+            document.getElementById('risk-val').innerText = risk.toFixed(1);
+
+            const deviation = (state.price - state.ma250) / state.ma250;
+            let multiplier = 1 - (deviation * risk);
+            multiplier = Math.max(0.1, Math.min(multiplier, 5.0));
+
+            document.getElementById('price-display').innerText = state.price.toFixed(2);
+            document.getElementById('ma-display').innerText = `$ ${state.ma250.toFixed(2)}`;
+            document.getElementById('dev-display').innerText = (deviation * 100).toFixed(2) + '%';
+            document.getElementById('dev-display').className = `text-xl font-bold mono ${deviation < 0 ? 'text-emerald-500' : 'text-blue-500'}`;
+
+            let mainVal, subVal;
+            if (state.mode === 'cash') {
+                mainVal = bAmt * multiplier;
+                subVal = mainVal / state.price;
+            } else {
+                mainVal = bQty * multiplier;
+                subVal = mainVal * state.price;
+            }
+
+            document.getElementById('main-val').innerText = mainVal.toFixed(2);
+            document.getElementById('sub-val').innerText = subVal.toFixed(2);
+            document.getElementById('mult-label').innerText = multiplier.toFixed(2) + 'x';
+            
+            const totalVal = state.price * holdQty;
+            document.getElementById('total-val').innerText = `$ ${totalVal.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('hold-status').innerText = `Holding: ${holdQty} Shares`;
+
+            const barWidth = Math.max(5, Math.min(95, 50 + (deviation * 100)));
+            document.getElementById('dev-bar').style.width = barWidth + '%';
+            document.getElementById('dev-bar').className = `h-full transition-all duration-1000 ${deviation < 0 ? 'bg-emerald-500' : 'bg-blue-600'}`;
+            document.getElementById('strategy-msg').innerText = deviation < 0 ? '低估加仓模式' : '常规持有模式';
+        }
+
+        // 倒计时刷新器
+        setInterval(() => {
+            state.timer--;
+            const progress = (state.timer / 30) * 100;
+            document.getElementById('timer-progress').style.width = progress + '%';
+            
+            if (state.timer <= 0) {
+                forceSync();
+                state.timer = 30;
+            }
+        }, 1000);
+
+        // 监听输入
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', updateUI));
+
+        // 初始运行
+        forceSync();
+
+    </script>
+</body>
+</html>
